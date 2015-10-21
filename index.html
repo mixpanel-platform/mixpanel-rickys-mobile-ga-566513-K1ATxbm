@@ -190,6 +190,8 @@
   **      Edit button per element
   **      Save if in edit
   **      Delete button if in edit
+  **    Caching off Local
+  **    Import/Export Spec
   */
   
   // On document ready, check for spec in localStorage. Parse if it's there.
@@ -308,7 +310,6 @@
 
   // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
   $("body").on("click",".expand-button", function(e){
-    debugger
     className = this.className;
 
     if (className == "fa fa-caret-left expand-button") {
