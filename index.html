@@ -5,11 +5,303 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- Booboo style sheet -->
+    <style type="text/css">
+
+      body {
+        max-width: 980px;
+      }
+
+      #add-property {
+        margin:5px 0 0 0;
+      }
+
+      .center {
+        -webkit-order: 0;
+        -ms-flex-order: 0;
+        order: 0;
+        -webkit-flex: 3 1 auto;
+        -ms-flex: 3 1 auto;
+        flex: 3 1 auto;
+        -webkit-align-self: center;
+        -ms-flex-item-align: center;
+        align-self: center;
+      }
+
+      .flex-container {
+          display: -ms-flexbox;
+          display: -webkit-flex;
+          display: flex;
+          -webkit-flex-direction: column;
+          -ms-flex-direction: column;
+          flex-direction: column;
+          -webkit-flex-wrap: nowrap;
+          -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
+          -webkit-justify-content: flex-start;
+          -ms-flex-pack: start;
+          justify-content: flex-start;
+          -webkit-align-content: stretch;
+          -ms-flex-line-pack: stretch;
+          align-content: stretch;
+          -webkit-align-items: flex-start;
+          -ms-flex-align: start;
+          align-items: flex-start;
+        }
+
+      .events, .input-events {
+          -webkit-order: 0;
+          -ms-flex-order: 0;
+          order: 0;
+          -webkit-flex: 0 1 auto;
+          -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
+          -webkit-align-self: flex-start;
+          -ms-flex-item-align: start;
+          /*align-self: left;*/
+          font-size:18px;
+          height:20px;
+        }
+      
+      .save-button {
+        font-size:14px;
+        height:24px;
+        -webkit-align-self: flex-start;
+        -ms-flex-item-align: start;
+      }
+
+      .saved-date {
+        font-style: oblique;
+        color:grey;
+        margin:10px 0 0 0;
+      }
+
+      .events {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+        -webkit-align-content: stretch;
+        -ms-flex-line-pack: stretch;
+        align-content: stretch;
+        -webkit-align-items: flex-start;
+        -ms-flex-align: start;
+        align-items: flex-start;
+        margin:5px 0 0 5px;
+        order:0;
+        font-size:18px;
+        height:auto;
+      }
+
+      .edit-field {
+        display:flex;
+        font-size:18px;
+        height:18px;
+        text-align:center;
+      }
+
+      .expand-button {
+        width:10px;
+        margin: 0 10px 0 0;
+        cursor: pointer;
+        font-weight: 800;
+      }
+
+      .properties {
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-flex-wrap: nowrap;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+        justify-content: flex-start;
+        -webkit-align-content: stretch;
+        -ms-flex-line-pack: stretch;
+        align-content: stretch;
+        -webkit-align-items: flex-start;
+        -ms-flex-align: start;
+        align-items: flex-start;
+        display: none;
+        margin: 0 0 0 10px;
+      }
+
+      .input-properties {
+        margin: 5px 0 0 0;
+        width:180px;
+        text-align: center;
+      }
+
+      .property-info {
+        margin: 0 0 0 10px;
+        font-style: oblique;
+        font-weight:100;
+        display:none;
+      }
+
+      .input-events {
+        display:flex;
+        height:20px;
+        width:250px;
+        text-align: center;
+        font-size:18px;
+        margin:0 0 10px 0;
+      }
+
+      .event-name {
+        width: 160px;
+      }
+    </style>
+
   </head>
-  <body class="mixpanel-platform-body">
-    <h1>Hello, World!</h1>
-    <script>
-      // Run queries and display results here
-    </script>
+
+  <body class="mixpanel-platform-body spec">
+
+    <div class="spec-items flex-container">
+
+      <input class="input-events" type="text" placeholder="Add an event. Press enter."></input>
+      <button class="save-button">Save</button>
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+  // On document ready, check for spec in localStorage. Parse if it's there.
+  $(document).ready(function(){
+    if (localStorage.getItem("spec")) {
+      console.log("Found a spec!");
+      saved_list = JSON.parse(localStorage.getItem("spec"));
+      saved_date = localStorage.getItem("saved_date");
+      
+      if (saved_date != null) {
+        $(".spec-items").append("<span class='saved-date'> Last saved on: "+saved_date+"</span>");
+      }
+      // console.log(saved_list);
+
+      for (i = 0; i < saved_list.length; i++) {
+        event = saved_list[i].event;
+        $(".spec-items").append("<div class='events'><span class='expand-button'>+</span><div class='event-name'>"+event+"</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
+        
+        for (j=0; j < saved_list[i].$properties.length; j++) {
+          property = saved_list[i].$properties[j];
+          $(".properties").last().append("<div class='property-name'>"+property+"</div>");
+        };
+      };
+    };
+  });    
+
+  // Listen for presses of the enter key 
+  $("body").on("keyup","input", function(e){
+      if(e.keyCode == 13)
+      {
+          $(this).trigger("enterKey");
+      }
+  });
+
+  // Add new event name if you press enter key on the main input field
+  $(".input-events").bind("enterKey", function(){
+    value = $(this).val();
+    $(".spec-items").append("<div class='events'><span class='expand-button'>+</span><div class='event-name'>"+value+"</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
+    $(this).val("");
+  });
+
+  // Add new property name if you press enter key on input
+  $("body").on("keyup",".input-properties", function(e){
+    if (e.keyCode == 13) {
+      value = $(this).val();
+      $(this).parent(".properties").append("<div class='property-name'>"+value+"</div>");
+      $(this).val("");
+    }
+  });
+
+  // Make event name div "editable"
+  $("body").on("click",".event-name", function(){
+    value = $(this).text();
+    $(this).replaceWith("<input class='edit-field' value="+value+"></input>");
+    // value = "";
+  });
+
+  // Make property name div "editable"
+  $("body").on("click",".property-name", function(){
+    value = $(this).text();
+    $(this).replaceWith("<input class='edit-field' value="+value+"></input>");
+    // value = "";
+  });
+
+  // Switch editable div back to regular element on enter. Delete if blank.
+  $("body").on("keyup",".edit-field", function(e){
+      if(e.keyCode == 13 || e.keyCode == 27)
+      {
+          value = $(this).val();
+          if (value == "" || value == " ") {
+            $(this).parent(".events").remove();
+            console.log("Removed element.");
+          } else {
+            $(this).replaceWith("<div class='event-name'>"+value+"</div>");    
+          }
+      }
+  });
+
+  // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
+  $("body").on("click",".expand-button", function(){
+    text = $(this).text();
+
+    if (text == "+") {
+      $(this).text("-");
+    } else {
+      $(this).text("+");
+    };
+
+    $(this).siblings(".properties").toggle();
+  });
+
+  // Build list of JSON from spec items, stringify, then save to localStorage.
+  $(".save-button").on("click",function(){
+    list = [];
+
+    // Build list of JSON objects.
+    $(".events").each(function(){
+      props = [];
+      json = {};
+
+      event = $(this).children(".event-name").text();
+      json["event"] = event;
+
+      $(this).children(".properties").each(function(){
+        json["$properties"] = [];
+        $(this).children(".property-name").each(function(){
+          prop = $(this).text();  
+          props.push(prop);
+          json["$properties"] = props;
+        });
+      });
+      list.push(json);
+    });
+    // console.log(list);
+
+    // Stringify and save to localStorage.
+    if (typeof(Storage) !== "undefined") {
+        localStorage.setItem("spec", JSON.stringify(list));
+        localStorage.setItem("saved_date", new Date());
+        console.log(JSON.stringify(list));
+        alert("Saved!");
+      } else {
+      alert("Sorry! Your browser does not support local storage.");
+    };
+  });
+
+  </script>
   </body>
 </html>
