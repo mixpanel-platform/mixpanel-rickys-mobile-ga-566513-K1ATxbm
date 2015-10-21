@@ -213,11 +213,11 @@
   checker = function(name, properties) {
     MP.api.topProperties(name).done(function(results){
       if ($.isEmptyObject(results.json)) {
-        $(document.getElementById(name)).prepend("<i class='fa fa-exclamation'></i>")
+        $(document.getElementById(name)).append(" <i class='fa fa-exclamation'></i>")
         $(document.getElementById(name)).css('color', 'red');
         
       } else {
-        $(document.getElementById(name)).prepend("<i class='fa fa-check'></i>")
+        $(document.getElementById(name)).append(" <i class='fa fa-check'></i>")
         $(document.getElementById(name)).css('color', 'green');
       }
       
