@@ -211,29 +211,36 @@
   
   checker = function(name, properties) {
     MP.api.topProperties(name).done(function(results){
+      var eventState = true;
+      var propertiesState = true;
       if ($.isEmptyObject(results.json)) {
-        $(document.getElementById(name)).append(" <i class='fa fa-exclamation'></i>")
-        $(document.getElementById(name)).css('color', 'red');
-        
+        eventState = false
       } else {
+        propNamesExist = results.json;
+        $.each(properties, function(index, desiredProp) {
+          id = name + "-" + desiredProp
+          console.log(id);
+          if (!propNamesExist[desiredProp]) {
+            $(document.getElementById(id)).append(" <i class='fa fa-exclamation'></i>")
+            $(document.getElementById(id)).css('color', 'red');
+            propertiesState = false
+          } else {
+            $(document.getElementById(id)).append(" <i class='fa fa-check'></i>")
+            $(document.getElementById(id)).css('color', 'green');
+          }
+        })
+      }
+      if (eventState && propertiesState) {
         $(document.getElementById(name)).append(" <i class='fa fa-check'></i>")
         $(document.getElementById(name)).css('color', 'green');
+      } else if (eventState && !propertiesState) {
+        $(document.getElementById(name)).append(" <i class='fa fa-flag'></i>")
+        $(document.getElementById(name)).css('color', 'yellow');
+      } else {
+        $(document.getElementById(name)).append(" <i class='fa fa-exclamation'></i>")
+        $(document.getElementById(name)).css('color', 'red');
       }
       
-      propNamesExist = results.json;
-      $.each(properties, function(index, desiredProp) {
-        id = name + "-" + desiredProp
-        console.log(id);
-        if (propNamesExist[desiredProp]) {
-          console.log('boop')
-          $(document.getElementById(id)).append("<i class='fa fa-check'></i>")
-          $(document.getElementById(id)).css('color', 'green');
-        }
-        else {
-          $(document.getElementById(id)).append("<i class='fa fa-exclamation'></i>")
-          $(document.getElementById(id)).css('color', 'red')
-        }
-      })
     })
   };
                 
