@@ -212,25 +212,29 @@
   
   checker = function(name, properties) {
     MP.api.topProperties(name).done(function(results){
-        if ($.isEmptyObject(results.json)) {
-            $(document.getElementById(name)).append("<i class='fa fa-exclamation'></i>")
-        } else {
-            $(document.getElementById(id)).append("<i class='fa fa-check'></i>")
-
-        }
+      if ($.isEmptyObject(results.json)) {
+        $(document.getElementById(name)).append("<i class='fa fa-exclamation'></i>")
+        $(document.getElementById(name)).css('color', 'red');
         
-        propNamesExist = results.json;
-        $.each(properties, function(index, desiredProp) {
-            id = name + "-" + desiredProp
-            console.log(id);
-            if (propNamesExist[desiredProp]) {
-                console.log('boop')
-                $(document.getElementById(id)).append("<i class='fa fa-check'></i>")
-            }
-            else {
-                $(document.getElementById(id)).append("<i class='fa fa-exclamation'></i>")
-            }
-        })
+      } else {
+        $(document.getElementById(name)).append("<i class='fa fa-check'></i>")
+        $(document.getElementById(name)).css('color', 'green');
+      }
+      
+      propNamesExist = results.json;
+      $.each(properties, function(index, desiredProp) {
+        id = name + "-" + desiredProp
+        console.log(id);
+        if (propNamesExist[desiredProp]) {
+          console.log('boop')
+          $(document.getElementById(id)).append("<i class='fa fa-check'></i>")
+          $(document.getElementById(id)).css('color', 'green');
+        }
+        else {
+          $(document.getElementById(id)).append("<i class='fa fa-exclamation'></i>")
+          $(document.getElementById(id)).css('color', 'red')
+        }
+      })
     })
   };
                 
