@@ -199,8 +199,38 @@
           $(".properties").last().append("<div class='property-name'>"+property+"</div>");
         };
       };
+      debugger
+      
+      $.each(spec, function(index, eventInfo) { 
+        currentEvent = eventInfo
+        eventName = currentEvent[0];
+        eventProps = currentEvent[1];
+        checker(eventName, eventProps);
+      });
     };
-  });    
+  });
+  
+  checker = function(name, properties) {
+    MP.api.topProperties(name).done(function(results){
+        if ($.isEmptyObject(results.json)) {
+            $(document.getElementById(name)).css('color', 'red')
+        }
+        
+        propNamesExist = results.json;
+        $.each(properties, function(index, desiredProp) {
+            id = name + "-" + desiredProp
+            console.log(id);
+            if (propNamesExist[desiredProp]) {
+                console.log('boop')
+                $(document.getElementById(id)).css('color', 'green');
+            }
+            else {
+                $(document.getElementById(id)).css('color', 'red');
+            }
+        })
+    })
+  };
+                
 
   // Listen for presses of the enter key 
   $("body").on("keyup","input", function(e){
