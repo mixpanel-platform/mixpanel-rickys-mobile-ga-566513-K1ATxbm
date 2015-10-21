@@ -213,7 +213,10 @@
   checker = function(name, properties) {
     MP.api.topProperties(name).done(function(results){
         if ($.isEmptyObject(results.json)) {
-            $(document.getElementById(name)).append("<i class='fa fa-exclamation-triangle'></i>")
+            $(document.getElementById(name)).append("<i class='fa fa-exclamation'></i>")
+        } else {
+            $(document.getElementById(id)).append("<i class='fa fa-check'></i>")
+
         }
         
         propNamesExist = results.json;
@@ -222,10 +225,10 @@
             console.log(id);
             if (propNamesExist[desiredProp]) {
                 console.log('boop')
-                $(document.getElementById(id)).css('color', 'green');
+                $(document.getElementById(id)).append("<i class='fa fa-check'></i>")
             }
             else {
-                $(document.getElementById(id)).append("<i class='fa fa-exclamation-triangle'></i>")
+                $(document.getElementById(id)).append("<i class='fa fa-exclamation'></i>")
             }
         })
     })
