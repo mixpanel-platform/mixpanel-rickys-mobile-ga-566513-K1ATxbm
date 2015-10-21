@@ -224,19 +224,19 @@
         id = name + "-" + desiredProp
         console.log(id);
         if (!propNamesExist[desiredProp]) {
-          $(document.getElementById(id)).prepend("<i class='fa fa-ban' style='color: red;'></i> ")
+          $(document.getElementById(id)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
           propertiesState = false
         } else {
-          $(document.getElementById(id)).prepend("<i class='fa fa-check' style='color: green;'></i> ")
+          $(document.getElementById(id)).prepend("<i class='fa fa-check' style='color: green;'></i>")
         }
       })
       
       if (eventState && propertiesState) {
-        $(document.getElementById(name)).prepend("<i class='fa fa-check' style='color: green;'></i> ")
+        $(document.getElementById(name)).prepend("<i class='fa fa-check' style='color: green;'></i>")
       } else if (eventState && !propertiesState) {
-        $(document.getElementById(name)).prepend("<i class='fa fa-exclamation' style='color: orange;'></i> ")
+        $(document.getElementById(name)).prepend("<i class='fa fa-exclamation' style='color: orange;'></i>")
       } else {
-        $(document.getElementById(name)).prepend("<i class='fa fa-ban' style='color: red;'></i> ")
+        $(document.getElementById(name)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
       }
       
     })
