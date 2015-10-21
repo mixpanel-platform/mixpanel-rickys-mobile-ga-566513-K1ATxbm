@@ -199,9 +199,9 @@
           $(".properties").last().append("<div class='property-name'>"+property+"</div>");
         };
       };
-      debugger
       
-      $.each(spec, function(index, eventInfo) { 
+      $.each(saved_list, function(index, eventInfo) { 
+        debugger
         currentEvent = eventInfo
         eventName = currentEvent[0];
         eventProps = currentEvent[1];
