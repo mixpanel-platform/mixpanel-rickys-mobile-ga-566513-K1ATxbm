@@ -231,14 +231,11 @@
         })
       }
       if (eventState && propertiesState) {
-        $(document.getElementById(name)).append(" <i class='fa fa-check'></i>")
-        $(document.getElementById(name)).css('color', 'green');
+        $(document.getElementById(name)).append(" <i class='fa fa-check' style='color: green;'></i>")
       } else if (eventState && !propertiesState) {
-        $(document.getElementById(name)).append(" <i class='fa fa-flag'></i>")
-        $(document.getElementById(name)).css('color', 'yellow');
+        $(document.getElementById(name)).append(" <i class='fa fa-flag' style='color: yellow;'></i>")
       } else {
-        $(document.getElementById(name)).append(" <i class='fa fa-exclamation'></i>")
-        $(document.getElementById(name)).css('color', 'red');
+        $(document.getElementById(name)).append(" <i class='fa fa-exclamation' style='color: red;'></i>")
       }
       
     })
