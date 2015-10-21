@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
@@ -213,7 +213,7 @@
   checker = function(name, properties) {
     MP.api.topProperties(name).done(function(results){
         if ($.isEmptyObject(results.json)) {
-            $(document.getElementById(name)).css('color', 'red')
+            $(document.getElementById(name)).class('fa-exclamation-triangle')
         }
         
         propNamesExist = results.json;
@@ -225,7 +225,7 @@
                 $(document.getElementById(id)).css('color', 'green');
             }
             else {
-                $(document.getElementById(id)).css('color', 'red');
+                $(document.getElementById(id)).class('fa-exclamation-triangle');
             }
         })
     })
