@@ -251,7 +251,7 @@
   // Add new event name if you press enter key on the main input field
   $(".input-events").bind("enterKey", function(){
     value = $(this).val();
-    $(".spec-items").append("<div class='events'><span class='expand-button'>+</span><div class='event-name'>"+value+"</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
+    $(".spec-items").append("<div class='events'><i class='fa fa-plus-square-o'></i><div class='event-name'>"+value+"</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
     $(this).val("");
   });
 
@@ -293,14 +293,15 @@
   });
 
   // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
-  $("body").on("click",".expand-button", function(el){
+  $("body").on("click",".expand-button", function(e){
     debugger
-    text = $(this).text();
+    className = $(this).className;
 
-    if (text == "+") {
-      $(this).html("<i class='fa fa-plus'>");
+    if (className == "fa fa-plus-square-o") {
+      $(this).html("<i class='fa fa-minus-square-o'></i>");
     } else {
-      $(this).html("<i class='fa fa-minus'>");
+      $(this).html("<i class='fa fa-plus-square-o'></i>");
+      
     };
 
     $(this).siblings(".properties").toggle();
