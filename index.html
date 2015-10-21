@@ -203,8 +203,8 @@
       $.each(saved_list, function(index, eventInfo) { 
         debugger
         currentEvent = eventInfo
-        eventName = currentEvent[0];
-        eventProps = currentEvent[1];
+        eventName = currentEvent.event;
+        eventProps = currentEvent.$properties;
         checker(eventName, eventProps);
       });
     };
