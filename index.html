@@ -192,7 +192,7 @@
 
       for (i = 0; i < saved_list.length; i++) {
         event = saved_list[i].event;
-        $(".spec-items").append("<div class='events'><span class='expand-button'>+</span><div class='event-name' id='" + event + "'>" + event + "</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
+        $(".spec-items").append("<div class='events'><i class='fa fa-plus-square-o'></i><div class='event-name' id='" + event + "'>" + event + "</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
         
         for (j=0; j < saved_list[i].$properties.length; j++) {
           property = saved_list[i].$properties[j];
