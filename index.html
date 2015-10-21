@@ -192,7 +192,7 @@
 
       for (i = 0; i < saved_list.length; i++) {
         event = saved_list[i].event;
-        $(".spec-items").append("<div class='events'><i class='fa fa-plus-square-o'></i><div class='event-name' id='" + event + "'>" + event + "</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
+        $(".spec-items").append("<div class='events'><i class='fa fa-plus-square-o expand-button'></i><div class='event-name' id='" + event + "'>" + event + "</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
         
         for (j=0; j < saved_list[i].$properties.length; j++) {
           property = saved_list[i].$properties[j];
@@ -251,7 +251,7 @@
   // Add new event name if you press enter key on the main input field
   $(".input-events").bind("enterKey", function(){
     value = $(this).val();
-    $(".spec-items").append("<div class='events'><i class='fa fa-plus-square-o'></i><div class='event-name'>"+value+"</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
+    $(".spec-items").append("<div class='events'><i class='fa fa-plus-square-o expand-button'></i><div class='event-name'>"+value+"</div><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
     $(this).val("");
   });
 
@@ -298,9 +298,9 @@
     className = $(this).className;
 
     if (className == "fa fa-plus-square-o") {
-      $(this).html("<i class='fa fa-minus-square-o'></i>");
+      $(this).html("<i class='fa fa-minus-square-o expand-button'></i>");
     } else {
-      $(this).html("<i class='fa fa-plus-square-o'></i>");
+      $(this).html("<i class='fa fa-plus-square-o expand-button'></i>");
       
     };
 
