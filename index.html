@@ -407,7 +407,7 @@
               var data = null;
               var file = evt.target.files[0];
               var reader = new FileReader();
-              var eventIndex = 0;
+              var eventIndex = -1;
               reader.readAsText(file);
               
               reader.onload = function(event) {
@@ -431,8 +431,8 @@
                     var superProperty = arr[superPropColumn];
 
                     if (event){
-                      events.push({ event: event, $properties: [] });
                       eventIndex++;
+                      events.push({ event: event, $properties: [] });
                     }
                     
                     if (property) {
