@@ -338,12 +338,10 @@
       $(e.target).removeClass("fa-caret-left");
       $(e.target).addClass("fa-caret-down");
     } else {
+      debugger
       $(e.target).addClass("fa-caret-left");
       $(e.target).removeClass("fa-caret-down");
-
-      
     };
-
     $(this).siblings(".properties").toggle();
   });
 
