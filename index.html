@@ -201,6 +201,7 @@
   **      Delete button if in edit
   **    Caching off in the project/Local
   **    Import/Export Spec
+  **      Delete Duplicates
   */
   
   // On document ready, check for spec in localStorage. Parse if it's there.
@@ -451,7 +452,7 @@
                     console.log(arr)
                   });
                   _.each(events, function(event){
-                    event.$properties = event.$properties.concat(superProps)
+                    event.$properties = new Set(event.$properties.concat(superProps))
                   });
                   debugger
                   specWrite(events)
