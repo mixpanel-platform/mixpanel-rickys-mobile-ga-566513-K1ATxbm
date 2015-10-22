@@ -210,6 +210,7 @@
         $(".spec-items").append("<div class='events'><div class='event-name' id='" + event + "'>" + event + "</div><i class='fa fa-caret-left expand-button'></i><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
         
         for (j=0; j < spec[i].$properties.length; j++) {
+          debugger
           property = spec[i].$properties[j];
           $(".properties").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
         };
@@ -441,7 +442,7 @@
                     }
                     
                     if (property) {
-                      events[eventIndex]['$properties'].push();
+                      events[eventIndex]['$properties'].push(property);
                     }
                     
                     if (superProperty) {
@@ -452,6 +453,7 @@
                   _.each(events, function(event){
                     event.$properties += superProps
                   });
+                  debugger
                   specWrite(events)
                 } else {
                   /* alert('No data to import!'); */
