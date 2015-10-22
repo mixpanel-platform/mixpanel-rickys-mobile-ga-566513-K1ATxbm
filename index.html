@@ -155,7 +155,7 @@
       .input-events {
         display:flex;
         height:20px;
-        width:250px;
+        width:500px;
         text-align: center;
         font-size:18px;
         margin:0 0 10px 0;
@@ -208,7 +208,7 @@
   function specWrite(spec) {
     for (var i = 0, n = spec.length; i < n; i++) {
         var event = spec[i]['event'];
-        $(".spec-items").append("<div class='events'><div class='event-name' id='" + event + "'>" + event + "</div><i class='fa fa-caret-left expand-button'></i>");
+        $(".spec-items").append("<div class='events'><div class='event-name' id='" + event + "'>" + event + "</div><i class='fa fa-caret-left expand-button'></i><div class='properties'></div>");
         var properties = spec[i]['$properties']
         properties.forEach(function(property){
           $(".properties").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
@@ -251,19 +251,19 @@
         id = name + "-" + desiredProp
         console.log(id);
         if (!propNamesExist[desiredProp]) {
-          $(document.getElementById(id)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
+          $(document.getElementById(id)).append("<i class='fa fa-ban' style='color: red;'></i>")
           propertiesState = false
         } else {
-          $(document.getElementById(id)).prepend("<i class='fa fa-check' style='color: green;'></i>")
+          $(document.getElementById(id)).append("<i class='fa fa-check' style='color: green;'></i>")
         }
       })
       
       if (eventState && propertiesState) {
-        $(document.getElementById(name)).prepend("<i class='fa fa-check' style='color: green;'></i>")
+        $(document.getElementById(name)).append("<i class='fa fa-check' style='color: green;'></i>")
       } else if (eventState && !propertiesState) {
-        $(document.getElementById(name)).prepend("<i class='fa fa-warning' style='color: orange;'></i>")
+        $(document.getElementById(name)).append("<i class='fa fa-warning' style='color: orange;'></i>")
       } else {
-        $(document.getElementById(name)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
+        $(document.getElementById(name)).append("<i class='fa fa-ban' style='color: red;'></i>")
       }
       
     })
