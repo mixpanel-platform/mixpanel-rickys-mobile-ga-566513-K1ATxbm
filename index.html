@@ -207,7 +207,7 @@
   // On document ready, check for spec in localStorage. Parse if it's there.
   function specWrite(spec) {
     for (var i = 0, n = spec.length; i < n; i++) {
-        var event = spec[i].event;
+        var event = spec[i]['event'];
         $(".spec-items").append("<div class='events'><div class='event-name' id='" + event + "'>" + event + "</div><i class='fa fa-caret-left expand-button'></i><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
         var properties = spec[i]['$properties']
         properties.forEach(function(property){
@@ -270,7 +270,7 @@
     })
   };
                 
-
+  /*
   // Listen for presses of the enter key 
   $("body").on("keyup","input", function(e){
       if(e.keyCode == 13)
@@ -322,6 +322,7 @@
           }
       }
   });
+  */
 
   // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
   $("body").on("click",".expand-button", function(e){
@@ -340,6 +341,7 @@
     $(this).siblings(".properties").toggle();
   });
 
+  /*
   // Build list of JSON from spec items, stringify, then save to localStorage.
   $(".save-button").on("click",function(){
     list = [];
@@ -374,14 +376,12 @@
       alert("Sorry! Your browser does not support local storage.");
     };
   });
+  */
   
       /* Upload and Store data client-side */
-      function toTitleCase(str) {
-          return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-      }
       
       document.getElementById("uploadBtn").onchange = function () {
-        document.getElementById("uploadFile").value = toTitleCase(this.value.split("\\")[this.value.split("\\").length - 1]);
+        document.getElementById("uploadFile").value = this.value.split("\\")[this.value.split("\\").length - 1];
       };
       
     
@@ -400,80 +400,69 @@
       // Method that reads and processes the selected file
       function upload(evt) {
       if (!browserSupportFileUpload()) {
-          alert('The File APIs are not fully supported in this browser!');
-          } else {
-              var eventColumn;
-              var propColumn;
-              var superPropColumn;
-              var header;
-              var csvArray;
-              var chartData = {};
-              var events = [];
-              var superProps = [];
-              var data = null;
-              var file = evt.target.files[0];
-              var reader = new FileReader();
-              var eventIndex = -1;
-              reader.readAsText(file);
-              
-              reader.onload = function(event) {
-                debugger
-                var csvData = event.target.result;
-                data = $.csv.toArrays(csvData);
-                header = data[3];
-                console.log(header)
-                console.log(data)
-                eventColumn = header.indexOf('Event');
-                propColumn = header.indexOf('Property');
-                superPropColumn = header.indexOf('Super Property');
+        alert('The File APIs are not fully supported in this browser!');
+        } else {
+          var eventColumn;
+          var propColumn;
+          var superPropColumn;
+          var header;
+          var csvArray;
+          var chartData = {};
+          var events = [];
+          var superProps = [];
+          var data = null;
+          var file = evt.target.files[0];
+          var reader = new FileReader();
+          var eventIndex = -1;
+          reader.readAsText(file);
+          
+          reader.onload = function(event) {
+            debugger
+            var csvData = event.target.result;
+            data = $.csv.toArrays(csvData);
+            header = data[3];
+            console.log(header)
+            console.log(data)
+            eventColumn = header.indexOf('Event');
+            propColumn = header.indexOf('Property');
+            superPropColumn = header.indexOf('Super Property');
 
-            
-                if (data && data.length > 0) {
-                  /* Create a dictionary with the transaction date and transaction amount */
-                  csvArray = data.slice(4, data.length);
-                  _.each(csvArray, function(arr){
-                    var property = arr[propColumn];
-                    var event = arr[eventColumn];
-                    var superProperty = arr[superPropColumn];
+        
+            if (data && data.length > 0) {
+              /* Create a dictionary with the transaction date and transaction amount */
+              csvArray = data.slice(4, data.length);
+              _.each(csvArray, function(arr){
+                var property = arr[propColumn];
+                var event = arr[eventColumn];
+                var superProperty = arr[superPropColumn];
 
-                    if (event){
-                      eventIndex++;
-                      events.push({ event: event, $properties: [] });
-                    }
-                    
-                    if (property) {
-                      events[eventIndex]['$properties'].push(property);
-                    }
-                    
-                    if (superProperty) {
-                      superProps.push(superProperty);
-                    }
-                    console.log(arr)
-                  });
-                  _.each(events, function(event){
-                    event.$properties = new Set(event.$properties.concat(superProps))
-                  });
-                  debugger
-                  specWrite(events)
-                } else {
-                  /* alert('No data to import!'); */
+                if (event){
+                  eventIndex++;
+                  events.push({ event: event, $properties: [] });
                 }
-              };
-              reader.onerror = function() {
-                  alert('Unable to read ' + file.fileName);
-              };
-          }
-      }
-      
-      function sum(arr) {
-          return  _.reduce(arr, function(sum, el) {
-            return sum + el
-          }, 0)
-      }
-      function avg(arr) {
-        return _.reduce(arr, function(memo, num) {
-            return memo + num;
-        }, 0) / (arr.length === 0 ? 1 : arr.length);
+                
+                if (property) {
+                  events[eventIndex]['$properties'].push(property);
+                }
+                
+                if (superProperty) {
+                  superProps.push(superProperty);
+                }
+                console.log(arr)
+              });
+              _.each(events, function(event){
+                event.$properties = new Set(event.$properties.concat(superProps))
+              });
+              debugger
+              specWrite(events)
+            } else {
+              /* alert('No data to import!'); */
+            }
+          };
+          reader.onerror = function() {
+              alert('Unable to read ' + file.fileName);
+          };
+        }
       }
   </script>
   </body>
