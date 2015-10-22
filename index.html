@@ -211,15 +211,15 @@
         $(".spec-items").append("<div class='events'><div class='event-name' id='" + event + "'>" + event + "</div><i class='fa fa-caret-left expand-button'></i><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
         var properties = spec[i]['$properties']
         properties.forEach(function(property){
-          debugger
           $(".properties").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
         });
       };
       
+      debugger
       $.each(spec, function(index, eventInfo) { 
         currentEvent = eventInfo
-        eventName = currentEvent.event;
-        eventProps = currentEvent.$properties;
+        eventName = currentEvent['event'];
+        eventProps = currentEvent['$properties'];
         checker(eventName, eventProps);
       });
   }
