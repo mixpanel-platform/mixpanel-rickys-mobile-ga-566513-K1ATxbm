@@ -215,11 +215,10 @@
         });
       };
       
-      debugger
       $.each(spec, function(index, eventInfo) { 
         currentEvent = eventInfo
         eventName = currentEvent['event'];
-        eventProps = currentEvent['$properties'];
+        eventProps = Array.from(currentEvent['$properties']);
         checker(eventName, eventProps);
       });
   }
@@ -417,7 +416,6 @@
           reader.readAsText(file);
           
           reader.onload = function(event) {
-            debugger
             var csvData = event.target.result;
             data = $.csv.toArrays(csvData);
             header = data[3];
@@ -453,7 +451,6 @@
               _.each(events, function(event){
                 event.$properties = new Set(event.$properties.concat(superProps))
               });
-              debugger
               specWrite(events)
             } else {
               /* alert('No data to import!'); */
