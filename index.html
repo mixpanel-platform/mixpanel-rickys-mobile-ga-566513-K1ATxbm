@@ -396,8 +396,9 @@
       if (!browserSupportFileUpload()) {
           alert('The File APIs are not fully supported in this browser!');
           } else {
-              var transactionDateColumn;
-              var transactionAmountColumn;
+              var eventColumn;
+              var propColumn;
+              var superPropColumn;
               var header;
               var csvArray;
               var chartData = {};
@@ -415,29 +416,25 @@
                 header = data[3];
                 console.log(header)
                 console.log(data)
+                eventColumn = header.indexOf('Event');
+                propColumn = header.indexOf('Property');
+                superPropColumn = header.indexOf('Super Property');
+
             
                 if (data && data.length > 0) {
                   /* Create a dictionary with the transaction date and transaction amount */
-                  csvArray = data.slice(3, data.length);
+                  csvArray = data.slice(4, data.length);
                   _.each(csvArray, function(arr){
+                    var property = arr[propColumn]
+                    var event = arr[eventColumn]
+                    var superProperty = arr[superPropColumn]
+
+                    if(event != ''){
+                      events.push({ event: event, $properties: [] })
+                    }
+                    debugger
                     console.log(arr)
                   });
-                  
-                  
-                  /* Add both of these to number circle */
-                  var avgTransactionData = avg(_.values(chartData));
-                  var flooredAvg = Math.round(avgTransactionData * 100) / 100
-                  var totalTransactionData = sum(_.values(chartData));
-                  var flooredTransaction = Math.round(totalTransactionData * 100) / 100
-                  var circle = $('.app-launches > .numberCircle')
-                  circle.text(flooredTransaction.toString())
-                  
-                  var secondCircle = $('.avg-monthly-visits > .numberCircle')
-                  secondCircle.text(flooredAvg.toString())
-                  
-                  console.log(chartData);
-                  runQuery(chartData);
-                    
                 } else {
                   /* alert('No data to import!'); */
                 }
