@@ -407,7 +407,7 @@
               var data = null;
               var file = evt.target.files[0];
               var reader = new FileReader();
-              var eventIndex = [];
+              var eventIndex = 0;
               reader.readAsText(file);
               
               reader.onload = function(event) {
@@ -426,16 +426,29 @@
                   /* Create a dictionary with the transaction date and transaction amount */
                   csvArray = data.slice(4, data.length);
                   _.each(csvArray, function(arr){
-                    var property = arr[propColumn]
-                    var event = arr[eventColumn]
-                    var superProperty = arr[superPropColumn]
+                    var property = arr[propColumn];
+                    var event = arr[eventColumn];
+                    var superProperty = arr[superPropColumn];
 
-                    if(event != ''){
-                      events.push({ event: event, $properties: [] })
+                    if (event){
+                      events.push({ event: event, $properties: [] });
+                      eventIndex++;
                     }
-                    debugger
+                    
+                    if (property) {
+                      events[eventIndex]['$properties'].push();
+                    }
+                    
+                    if (superProperty) {
+                      superProps.push(superProperty);
+                    }
                     console.log(arr)
                   });
+                  _.each(events, function(event)){
+                    event.$properties += superProps
+                    
+                  }
+                  debugger
                 } else {
                   /* alert('No data to import!'); */
                 }
