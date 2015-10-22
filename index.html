@@ -332,15 +332,14 @@
 
   // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
   $("body").on("click",".expand-button", function(e){
-    className = this.className;
-
-    if (className == "fa fa-caret-left expand-button") {
-      $(e.target).removeClass("fa-caret-left");
-      $(e.target).addClass("fa-caret-down");
+    var $target = $(e.target)
+    if ($target.hasClass("fa-caret-left")) {
+      $target.removeClass("fa-caret-left");
+      $target.addClass("fa-caret-down");
     } else {
       debugger
-      $(e.target).addClass("fa-caret-left");
-      $(e.target).removeClass("fa-caret-down");
+      $target.addClass("fa-caret-left");
+      $target.removeClass("fa-caret-down");
     };
     $(this).siblings(".properties").toggle();
   });
