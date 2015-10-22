@@ -418,7 +418,7 @@
           reader.onload = function(event) {
             var csvData = event.target.result;
             data = $.csv.toArrays(csvData);
-            header = data[3];
+            header = data[0];
             console.log(header)
             console.log(data)
             eventColumn = header.indexOf('Event');
@@ -428,7 +428,7 @@
         
             if (data && data.length > 0) {
               /* Create a dictionary with the transaction date and transaction amount */
-              csvArray = data.slice(4, data.length);
+              csvArray = data.slice(1, data.length);
               _.each(csvArray, function(arr){
                 var property = arr[propColumn];
                 var event = arr[eventColumn];
