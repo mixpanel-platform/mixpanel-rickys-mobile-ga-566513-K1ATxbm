@@ -451,7 +451,7 @@
                     console.log(arr)
                   });
                   _.each(events, function(event){
-                    event.$properties += superProps
+                    event.$properties = event.$properties.concat(superProps)
                   });
                   debugger
                   specWrite(events)
