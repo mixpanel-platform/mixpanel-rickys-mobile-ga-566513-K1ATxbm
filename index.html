@@ -172,6 +172,13 @@
   </head>
 
   <body class="mixpanel-platform-body spec">
+    <div class='csvUpload'>
+      <input style="opacity:0" id="uploadFile" placeholder="Choose File" disabled="disabled" class="" />
+      <div class="fileUpload btn btn-primary">
+        <span>Upload CSV</span>
+        <input id="uploadBtn" type="file" class="upload" placeholder="Upload File" />
+      </div>
+    </div>
 
     <div class="spec-items flex-container">
 
@@ -359,7 +366,99 @@
       alert("Sorry! Your browser does not support local storage.");
     };
   });
+  
+      /* Upload and Store data client-side */
+      function toTitleCase(str) {
+          return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+      }
+      
+      document.getElementById("uploadBtn").onchange = function () {
+        document.getElementById("uploadFile").value = toTitleCase(this.value.split("\\")[this.value.split("\\").length - 1]);
+      };
+      
+    
+      // The event listener for the file upload
+      document.getElementById('uploadBtn').addEventListener('change', upload, false);
 
+      // Method that checks that the browser supports the HTML5 File API
+      function browserSupportFileUpload() {
+          var isCompatible = false;
+          if (window.File && window.FileReader && window.FileList && window.Blob) {
+          isCompatible = true;
+          }
+          return isCompatible;
+      }
+  
+      // Method that reads and processes the selected file
+      function upload(evt) {
+      if (!browserSupportFileUpload()) {
+          alert('The File APIs are not fully supported in this browser!');
+          } else {
+              var transactionDateColumn;
+              var transactionAmountColumn;
+              var header;
+              var csvArray;
+              var chartData = {};
+              var data = null;
+              var file = evt.target.files[0];
+              var reader = new FileReader();
+              reader.readAsText(file);
+              
+              reader.onload = function(event) {
+                  var csvData = event.target.result;
+                  data = $.csv.toArrays(csvData);
+                  header = data[0];
+                  console.log(header)
+                  if (header.indexOf('trans_date') >= 0 && header.indexOf('sale_amount') >= 0) {
+                      transactionDateColumn = header.indexOf('trans_date');
+                      transactionAmountColumn =  header.indexOf('sale_amount');
+                      
+                      console.log(data)
+                  
+                      if (data && data.length > 0) {
+                        /* Create a dictionary with the transaction date and transaction amount */
+                        csvArray = data.slice(1, data.length);
+                        _.each(csvArray, function(arr){
+                            chartData[arr[transactionDateColumn].split(' ')[0]] = parseInt(arr[transactionAmountColumn]);
+                        });
+                        
+                        
+                        /* Add both of these to number circle */
+                        var avgTransactionData = avg(_.values(chartData));
+                        var flooredAvg = Math.round(avgTransactionData * 100) / 100
+                        var totalTransactionData = sum(_.values(chartData));
+                        var flooredTransaction = Math.round(totalTransactionData * 100) / 100
+                        var circle = $('.app-launches > .numberCircle')
+                        circle.text(flooredTransaction.toString())
+                        
+                        var secondCircle = $('.avg-monthly-visits > .numberCircle')
+                        secondCircle.text(flooredAvg.toString())
+                        
+                        console.log(chartData);
+                        runQuery(chartData);
+                          
+                      } else {
+                        /* alert('No data to import!'); */
+                      }
+                  }
+                 
+              };
+              reader.onerror = function() {
+                  alert('Unable to read ' + file.fileName);
+              };
+          }
+      }
+      
+      function sum(arr) {
+          return  _.reduce(arr, function(sum, el) {
+            return sum + el
+          }, 0)
+      }
+      function avg(arr) {
+        return _.reduce(arr, function(memo, num) {
+            return memo + num;
+        }, 0) / (arr.length === 0 ? 1 : arr.length);
+      }
   </script>
   </body>
 </html>
