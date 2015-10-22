@@ -405,6 +405,7 @@
               reader.readAsText(file);
               
               reader.onload = function(event) {
+                  debugger
                   var csvData = event.target.result;
                   data = $.csv.toArrays(csvData);
                   header = data[0];
