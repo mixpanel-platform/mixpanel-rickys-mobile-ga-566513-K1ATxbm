@@ -418,9 +418,9 @@
             
                 if (data && data.length > 0) {
                   /* Create a dictionary with the transaction date and transaction amount */
-                  csvArray = data.slice(1, data.length);
+                  csvArray = data.slice(3, data.length);
                   _.each(csvArray, function(arr){
-                      chartData[arr[transactionDateColumn].split(' ')[0]] = parseInt(arr[transactionAmountColumn]);
+                    console.log(arr)
                   });
                   
                   
