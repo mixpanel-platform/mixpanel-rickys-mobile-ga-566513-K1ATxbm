@@ -403,10 +403,11 @@
               var csvArray;
               var chartData = {};
               var events = [];
-              var superProps = []
+              var superProps = [];
               var data = null;
               var file = evt.target.files[0];
               var reader = new FileReader();
+              var eventIndex = [];
               reader.readAsText(file);
               
               reader.onload = function(event) {
