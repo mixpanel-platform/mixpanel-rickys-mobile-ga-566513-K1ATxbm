@@ -208,7 +208,7 @@
   function specWrite(spec) {
     for (var i = 0, n = spec.length; i < n; i++) {
         var event = spec[i]['event'];
-        $(".spec-items").append("<div class='events'><div class='event-name' id='" + event + "'>" + event + "</div><i class='fa fa-caret-left expand-button'></i><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
+        $(".spec-items").append("<div class='events'><div class='event-name' id='" + event + "'>" + event + "</div><i class='fa fa-caret-left expand-button'></i>");
         var properties = spec[i]['$properties']
         properties.forEach(function(property){
           $(".properties").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
