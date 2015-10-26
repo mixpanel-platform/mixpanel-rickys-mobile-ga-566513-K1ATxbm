@@ -3,191 +3,61 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Base64/0.3.0/base64.js"></script>
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/1.1.1/js/md5.min.js"></script>
-
-<!-- Booboo style sheet -->
-    <style type="text/css">
-
-      body {
-        max-width: 980px;
-      }
-
-      #add-property {
-        margin:5px 0 0 0;
-      }
-
-      .center {
-        -webkit-order: 0;
-        -ms-flex-order: 0;
-        order: 0;
-        -webkit-flex: 3 1 auto;
-        -ms-flex: 3 1 auto;
-        flex: 3 1 auto;
-        -webkit-align-self: center;
-        -ms-flex-item-align: center;
-        align-self: center;
-      }
-
-      .flex-container {
-          display: -ms-flexbox;
-          display: -webkit-flex;
-          display: flex;
-          -webkit-flex-direction: column;
-          -ms-flex-direction: column;
-          flex-direction: column;
-          -webkit-flex-wrap: nowrap;
-          -ms-flex-wrap: nowrap;
-          flex-wrap: nowrap;
-          -webkit-justify-content: flex-start;
-          -ms-flex-pack: start;
-          justify-content: flex-start;
-          -webkit-align-content: stretch;
-          -ms-flex-line-pack: stretch;
-          align-content: stretch;
-          -webkit-align-items: flex-start;
-          -ms-flex-align: start;
-          align-items: flex-start;
-        }
-
-      .events, .input-events {
-          -webkit-order: 0;
-          -ms-flex-order: 0;
-          order: 0;
-          -webkit-flex: 0 1 auto;
-          -ms-flex: 0 1 auto;
-          flex: 0 1 auto;
-          -webkit-align-self: flex-start;
-          -ms-flex-item-align: start;
-          /*align-self: left;*/
-          font-size:18px;
-          height:20px;
-        }
-
-      .save-button {
-        font-size:14px;
-        height:24px;
-        -webkit-align-self: flex-start;
-        -ms-flex-item-align: start;
-      }
-
-      .saved-date {
-        font-style: oblique;
-        color:grey;
-        margin:10px 0 0 0;
-      }
-
-      .events {
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-direction: row;
-        -ms-flex-direction: row;
-        flex-direction: row;
-        -webkit-flex-wrap: nowrap;
-        -ms-flex-wrap: nowrap;
-        flex-wrap: nowrap;
-        -webkit-justify-content: flex-start;
-        -ms-flex-pack: start;
-        justify-content: flex-start;
-        -webkit-align-content: stretch;
-        -ms-flex-line-pack: stretch;
-        align-content: stretch;
-        -webkit-align-items: flex-start;
-        -ms-flex-align: start;
-        align-items: flex-start;
-        margin:5px 0 0 5px;
-        order:0;
-        font-size:18px;
-        height:auto;
-      }
-
-      .edit-field {
-        display:flex;
-        font-size:18px;
-        height:18px;
-        text-align:center;
-      }
-
-      .expand-button {
-        width:10px;
-        margin: 5px 10px 0 0;
-        cursor: pointer;
-        font-weight: 800;
-      }
-
-      .properties {
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        -webkit-flex-wrap: nowrap;
-        -ms-flex-wrap: nowrap;
-        flex-wrap: nowrap;
-        -webkit-justify-content: flex-start;
-        -ms-flex-pack: start;
-        justify-content: flex-start;
-        -webkit-align-content: stretch;
-        -ms-flex-line-pack: stretch;
-        align-content: stretch;
-        -webkit-align-items: flex-start;
-        -ms-flex-align: start;
-        align-items: flex-start;
-        display: none;
-        margin: 0 0 0 10px;
-      }
-
-      .input-properties {
-        margin: 5px 0 0 0;
-        width:180px;
-        text-align: center;
-      }
-
-      .property-info {
-        margin: 0 0 0 10px;
-        font-style: oblique;
-        font-weight:100;
-        display:none;
-      }
-
-      .input-events {
-        display:flex;
-        height:20px;
-        width:500px;
-        text-align: center;
-        font-size:18px;
-        margin:0 0 10px 0;
-      }
-
-      .event-name {
-        width: 300px;
-      }
-
-      .fa {
-        font-size:14px;
-        margin-right: 10px;
-      }
-    </style>
+  <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+  <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+  <!-- Booboo style sheet -->
 
   </head>
 
   <body class="mixpanel-platform-body spec">
-    <div class='csvUpload'>
-      <input style="opacity:0" id="uploadFile" placeholder="Choose File" disabled="disabled" class="" />
-      <div class="fileUpload btn btn-primary">
-        <span>Upload CSV</span>
-        <input id="uploadBtn" type="file" class="upload" placeholder="Upload File" />
-      </div>
-    </div>
-    <div class="spec-items flex-container">
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#fileModal">
+      Import / Export Spec
+    </button>
+    <div class="spec-items panel-group flex-container" id="accordian" role="tablisti">
 
       <!--<input class="input-events" type="text" placeholder="Add an event. Press enter.">-->
       <!--<button class="save-button">Save</button>-->
 
     </div>
+  <!-- Upload Modal -->
+  <div class="modal fade" id="fileModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Welcome to spec checker</h4>
+        </div>
+        <div class="modal-body">
+          <div class='postSpec'>
+            Hey we will post spec here
+          </div>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Upload a file</h4>
+        </div>
+        <div class="modal-body">
+          <div class='csvUpload'>
+            <input style="opacity:0" id="uploadFile" placeholder="Choose File" disabled="disabled" class="" />
+              <span>Upload CSV</span>
+              <input id="uploadBtn" type="file" class="upload" placeholder="Upload File" />
+          </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
   <script type="text/javascript">
 
   /*
@@ -196,135 +66,135 @@
   **    Run on every upload
   **    Expand not working properly
   **  To-Do
-  **    Run Button
-  **    Property Type?
-  **    Trigger for Each Kind
   **    Values for Properties?
-  **    Caching off in the project/Local
-  **      Edit/Delete more explicit
-  **        Edit button per element ?
-  **        Save if in edit
-  **        Delete button if in edit
-  **    Import/Export Spec
-  **      More resilient import
-  **      Sample Spec/Standardized
-  **    Pull in Google Doc/Public changes/Live Spec
   **    Make spec an object with the methods
+  **    Sample Specs per vertical
   */
 
   // On document ready, check for spec in localStorage. Parse if it's there.
-
-  function specWrite(spec) {
-    for (var i = 0, n = spec.length; i < n; i++) {
-        var event = spec[i]['event'];
-        $(".spec-items").append("<div class='events'><div class='event-name' id='" + event + "'>" + event + "</div><i class='fa fa-caret-left expand-button'></i><div class='properties'></div>");
-        var properties = spec[i]['$properties']
-        properties.forEach(function(property){
-          $(".properties").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
-        });
-      };
-
-      debugger
+  /*
+  function event() {
+    initialize: function(){
+    },
+    properties: function(){
+    }
+    render : function(){
+    }
+  }
+  */
+  var ProjectSpecs = function () {
+    this.render = function(){
+    };
+    this.checkSpec = function(spec){
       $.each(spec, function(index, eventInfo) {
         currentEvent = eventInfo
         eventName = currentEvent['event'];
         eventProps = Array.from(currentEvent['$properties']);
         checker(eventName, eventProps);
       });
-  }
+    };
 
-  /* Bitwise Encoding
-  ** takes stringified and key
-  ** returns XOR
-  */
+    /* Bitwise Encoding
+    ** takes stringified and key
+    ** returns XOR
+    */
 
-  function vernam(msg, key) {
-    var l = key.length;
-    var fromCharCode = String.fromCharCode;
-    return msg.replace(/[\s\S]/g, function(c, i) {
-      return fromCharCode(key.charCodeAt(i % l) ^ c.charCodeAt(0));
-    });
-  }
-
-  /* XHR promises
-  */
-
-  function request(method, url) {
-      return new Promise(function (resolve, reject) {
-          var xhr = new XMLHttpRequest();
-          xhr.open(method, url);
-          xhr.onload = resolve;
-          xhr.onerror = reject;
-          xhr.send();
+    this.vernam = function(msg, key) {
+      var l = key.length;
+      var fromCharCode = String.fromCharCode;
+      return msg.replace(/[\s\S]/g, function(c, i) {
+        return fromCharCode(key.charCodeAt(i % l) ^ c.charCodeAt(0));
       });
-  }
+    };
 
-  /* Post a spec to our glorious backend
-  **
-  **
-  */
+    /* XHR promises
+    */
 
-  function postSpec(spec){
-    var cypher = vernam(JSON.stringify(spec), MP.api.apiKey)
-          // base64 encryptG
-    var id = vernam(MP.api.apiKey, MP.api.apiSecret)
-    var url = 'http://spec-api.herokuapp.com/specs/create?key=' + md5(id) + '&spec=' + encodeCypher(cypher)
+    this.request = function(method, url) {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.onload = resolve;
+            xhr.onerror = reject;
+            xhr.send();
+        });
+    };
 
-    request('GET', url)
-      .then(function(e) {
-        console.log(e.target.response);
-      }, function(e) {
-        console.log(e);
-        console.log('Error');
-      })
-  }
+    /*
+    ** Post a spec to our glorious backend
+    */
 
-  function getSpec(){
-    var id = vernam(MP.api.apiKey, MP.api.apiSecret)
-    var url = 'http://spec-api.herokuapp.com/specs/read?key=' + md5(id)
+    this.postSpec = function (spec){
+      var cypher = this.vernam(JSON.stringify(spec), MP.api.apiKey);
+      var id = this.vernam(MP.api.apiKey, MP.api.apiSecret);
+      var url = 'http://spec-api.herokuapp.com/specs/create?key=' + md5(id) + '&spec=' + btoa(cypher);
 
-    request('GET', url)
-      .then(function(e) {
-        console.log(e)
+      this.request('GET', url)
+        .then(function(e) {
+          console.log(e.target.response);
+        }, function(e) {
+          console.log(e);
+          console.log('Error');
+        })
+    };
+
+    /*
+    ** Get a projects spec from our glorious backend
+    */
+    this.specWrite = function (spec){
+      for (var i = 0, n = spec.length; i < n; i++) {
+          var event = spec[i]['event'];
+
+          $(".spec-items").append(
+              [
+                "<div class='events panel panel-default'>",
+                "<div class='panel-heading event-name' role='table' id='" + event + "'>",
+                "<a role='button' data-toggle='collapse' data-parent='#accordian' href='#" + event + "'>" + event + "</a>",
+                "</div>",
+                "<i class='fa fa-caret-left expand-button'></i>",
+                "<div id=" + event  + " class='panel-collapse collapse in' role='tabpanel'>",
+                "<div class='panel-body properties'>",
+                "</div>",
+                "</div>"
+              ].join('\n'));
+
+          var properties = spec[i]['$properties']
+          properties.forEach(function(property){
+            $(".properties").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
+          });
+        };
+
         debugger
-        console.log(e.target.response);
-      }, function(e) {
-        console.log(e);
-        console.log('Error');
-      })
-  }
+        specs = new ProjectSpecs()
+        specs.checkSpec(spec)
+    }
 
-  /* Encode and decode cypher */
-  function encodeCypher(key){
-    return btoa(key)
-  }
-  function decodeCypher(urlParam){
-    return decodeURIComponent(urlParam)
-  }
-  /* Exports spec to csv
-  ** Takes JSON Spec
-  ** Returns CSV
-  */
-  function exportSpec(spec){
-    debugger;
-  }
+    this.getSpecs = function(){
+      var id = this.vernam(MP.api.apiKey, MP.api.apiSecret);
+      var url = 'http://spec-api.herokuapp.com/specs/read?key=' + md5(id);
 
-  /* Take key to encryptSpec to string
-  ** Takes spec
-  ** returns encrpyted string
-  */
-  function encryptSpec(spec){
+      this.request('GET', url)
+        .then(function(e) {
+          console.log(e);
+          console.log(e.target.response);
+          this.specs = JSON.parse(e.target.response);
+        }, function(e) {
+          console.log(e);
+          console.log('Error');
+        })
+    };
+    /* Exports spec to csv
+    ** Takes JSON Spec
+    ** Returns CSV
+    */
+    this.exportSpec = function (spec) {
+      debugger;
+    };
 
-  }
+    }
 
-  /* Decrypt with mp.api.key and jsonify
-  ** takes string
-  ** returns json spec
-  */
 
-  function decryptSpec(string){
 
-  }
   /*
   $(document).ready(function(){
     if (localStorage.getItem("spec")) {
@@ -478,6 +348,8 @@
 
       /* Upload and Store data client-side */
 
+      Specs = window.Specs = new ProjectSpecs()
+      Specs.getSpecs()
       document.getElementById("uploadBtn").onchange = function () {
         document.getElementById("uploadFile").value = this.value.split("\\")[this.value.split("\\").length - 1];
       };
@@ -550,7 +422,7 @@
               _.each(events, function(event){
                 event.$properties = new Set(event.$properties.concat(superProps))
               });
-              specWrite(events)
+              return events
             } else {
               /* alert('No data to import!'); */
             }
