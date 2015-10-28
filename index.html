@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
   <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-  <!-- Booboo style sheet -->
 
   </head>
 
@@ -23,7 +22,9 @@
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#fileModal">
       Import / Export Spec
     </button>
-    <div class="spec-items panel-group flex-container" id="accordian" role="tablisti">
+    <div id="specs-list" ></div>
+    <button id="run" class="btn btn-primary" style="display: none;">Run</button>
+    <div class="spec-items panel-group flex-container" id="accordian" role="tablist">
 
       <!--<input class="input-events" type="text" placeholder="Add an event. Press enter.">-->
       <!--<button class="save-button">Save</button>-->
@@ -71,35 +72,12 @@
   **    Sample Specs per vertical
   */
 
-  // On document ready, check for spec in localStorage. Parse if it's there.
-  /*
-  function event() {
-    initialize: function(){
-    },
-    properties: function(){
-    }
-    render : function(){
-    }
-  }
+  /* Bitwise Encoding
+  ** takes stringified and key
+  ** returns XOR
   */
-  var ProjectSpecs = function () {
-    this.render = function(){
-    };
-    this.checkSpec = function(spec){
-      $.each(spec, function(index, eventInfo) {
-        currentEvent = eventInfo
-        eventName = currentEvent['event'];
-        eventProps = Array.from(currentEvent['$properties']);
-        checker(eventName, eventProps);
-      });
-    };
 
-    /* Bitwise Encoding
-    ** takes stringified and key
-    ** returns XOR
-    */
-
-    this.vernam = function(msg, key) {
+    vernam = function(msg, key) {
       var l = key.length;
       var fromCharCode = String.fromCharCode;
       return msg.replace(/[\s\S]/g, function(c, i) {
@@ -110,7 +88,7 @@
     /* XHR promises
     */
 
-    this.request = function(method, url) {
+    request = function(method, url) {
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
             xhr.open(method, url);
@@ -120,16 +98,49 @@
         });
     };
 
+    var Project = function(){}
+    Project.prototype.renderDropdown = function() {
+          var specsOpts = {items: []}
+          for ( var i = this.specs.length - 1; i >= 0; i--) {
+            var created
+            var spec = this['specs'][i]['spec']
+            created = this['specs'][i]['created_at'] || "Work In Progress"
+            specsOpts.items.push({label: created, value: spec})
+          }
+          MP.$('#specs-list').MPSelect(specsOpts)
+          $('#run').show()
+    }
+    /*
+    ** Get a projects spec from our glorious backend
+    */
+    Project.prototype.getSpecs = function(){
+      var id = vernam(MP.api.apiKey, MP.api.apiSecret);
+      var url = 'http://spec-api.herokuapp.com/specs/read?key=' + md5(id);
+      return request('GET', url)
+    };
+
+    Project.prototype.render = function(){
+    };
+
+    Project.prototype.checkSpec = function(spec){
+      $.each(spec, function(index, eventInfo) {
+        currentEvent = eventInfo
+        eventName = currentEvent['event'];
+        eventProps = Array.from(currentEvent['$properties']);
+        checker(eventName, eventProps);
+      });
+    };
+
     /*
     ** Post a spec to our glorious backend
     */
 
-    this.postSpec = function (spec){
+    Project.prototype.postSpec = function (spec){
       var cypher = this.vernam(JSON.stringify(spec), MP.api.apiKey);
       var id = this.vernam(MP.api.apiKey, MP.api.apiSecret);
       var url = 'http://spec-api.herokuapp.com/specs/create?key=' + md5(id) + '&spec=' + btoa(cypher);
 
-      this.request('GET', url)
+      request('GET', url)
         .then(function(e) {
           console.log(e.target.response);
         }, function(e) {
@@ -138,303 +149,202 @@
         })
     };
 
-    /*
-    ** Get a projects spec from our glorious backend
-    */
-    this.specWrite = function (spec){
+    Project.prototype.specWrite = function (spec){
       for (var i = 0, n = spec.length; i < n; i++) {
           var event = spec[i]['event'];
+          var cssSafe = event.replace('$','')
 
           $(".spec-items").append(
               [
                 "<div class='events panel panel-default'>",
-                "<div class='panel-heading event-name' role='table' id='" + event + "'>",
-                "<a role='button' data-toggle='collapse' data-parent='#accordian' href='#" + event + "'>" + event + "</a>",
+                "<div class='panel-heading event-name' role='table' id='" + cssSafe + "'>",
+                "<a role='button' data-toggle='collapse' data-parent='#accordian' href='#" + cssSafe + "'>" + event + "</a>",
                 "</div>",
                 "<i class='fa fa-caret-left expand-button'></i>",
-                "<div id=" + event  + " class='panel-collapse collapse in' role='tabpanel'>",
+                "<div id=" + cssSafe  + " class='panel-collapse collapse in' role='tabpanel'>",
                 "<div class='panel-body properties'>",
                 "</div>",
                 "</div>"
               ].join('\n'));
 
           var properties = spec[i]['$properties']
-          properties.forEach(function(property){
-            $(".properties").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
-          });
+          for(var j = properties.length - 1; j >= 0; j--){
+            var property = properties[j]
+            $(".properties").last().append("<div class='property-name' id='" + cssSafe + "-" + property + "'>" + property + "</div>");
+          };
         };
-
-        debugger
-        specs = new ProjectSpecs()
-        specs.checkSpec(spec)
+        this.checkSpec(spec)
     }
 
-    this.getSpecs = function(){
-      var id = this.vernam(MP.api.apiKey, MP.api.apiSecret);
-      var url = 'http://spec-api.herokuapp.com/specs/read?key=' + md5(id);
-
-      this.request('GET', url)
-        .then(function(e) {
-          console.log(e);
-          console.log(e.target.response);
-          this.specs = JSON.parse(e.target.response);
-        }, function(e) {
-          console.log(e);
-          console.log('Error');
-        })
-    };
     /* Exports spec to csv
     ** Takes JSON Spec
     ** Returns CSV
     */
-    this.exportSpec = function (spec) {
-      debugger;
+    Project.prototype.exportSpec = function (spec) {
     };
 
-    }
-
-
-
-  /*
-  $(document).ready(function(){
-    if (localStorage.getItem("spec")) {
-      console.log("Found a spec!");
-      saved_list = JSON.parse(localStorage.getItem("spec"));
-      saved_date = localStorage.getItem("saved_date");
-
-      if (saved_date != null) {
-        $(".spec-items").append("<span class='saved-date'> Last saved on: "+saved_date+"</span>");
-      }
-      // console.log(saved_list);
-
-
-    };
-  });
-  */
-
-  checker = function(name, properties) {
-    MP.api.topProperties(name).done(function(results){
-      var eventState = true;
-      var propertiesState = true;
-      if ($.isEmptyObject(results.json)) {
-        eventState = false
-      }
-      propNamesExist = results.json;
-      $.each(properties, function(index, desiredProp) {
-        id = name + "-" + desiredProp
-        console.log(id);
-        if (!propNamesExist[desiredProp]) {
-          $(document.getElementById(id)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
-          propertiesState = false
-        } else {
-          $(document.getElementById(id)).prepend("<i class='fa fa-check' style='color: green;'></i>")
+    checker = function(name, properties) {
+      MP.api.topProperties(name).done(function(results){
+        var eventState = true;
+        var propertiesState = true;
+        if ($.isEmptyObject(results.json)) {
+          eventState = false
         }
-      })
-
-      if (eventState && propertiesState) {
-        $(document.getElementById(name)).prepend("<i class='fa fa-check' style='color: green;'></i>")
-      } else if (eventState && !propertiesState) {
-        $(document.getElementById(name)).prepend("<i class='fa fa-warning' style='color: orange;'></i>")
-      } else {
-        $(document.getElementById(name)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
-      }
-
-    })
-  };
-
-  /*
-  // Listen for presses of the enter key
-  $("body").on("keyup","input", function(e){
-      if(e.keyCode == 13)
-      {
-          $(this).trigger("enterKey");
-      }
-  });
-
-  // Add new event name if you press enter key on the main input field
-  $(".input-events").bind("enterKey", function(){
-    value = $(this).val();
-    $(".spec-items").append("<div class='events'><div class='event-name'>"+value+"</div><i class='fa fa-caret-left expand-button'></i><span class='property-info'># properties</span><div class='properties'><input class='input-properties' placeholder='Add a property. Press enter.'></input></div></div>");
-    $(this).val("");
-  });
-
-  // Add new property name if you press enter key on input
-  $("body").on("keyup",".input-properties", function(e){
-    if (e.keyCode == 13) {
-      value = $(this).val();
-      $(this).parent(".properties").append("<div class='property-name'>"+value+"</div>");
-      $(this).val("");
-    }
-  });
-
-  // Make event name div "editable"
-  $("body").on("click",".event-name", function(){
-    value = $(this).text();
-    $(this).replaceWith("<input class='edit-field' value="+value+"></input>");
-    // value = "";
-  });
-
-  // Make property name div "editable"
-  $("body").on("click",".property-name", function(){
-    value = $(this).text();
-    $(this).replaceWith("<input class='edit-field' value="+value+"></input>");
-    // value = "";
-  });
-
-  // Switch editable div back to regular element on enter. Delete if blank.
-  $("body").on("keyup",".edit-field", function(e){
-      if(e.keyCode == 13 || e.keyCode == 27)
-      {
-          value = $(this).val();
-          if (value == "" || value == " ") {
-            $(this).parent(".events").remove();
-            console.log("Removed element.");
+        propNamesExist = results.json;
+        $.each(properties, function(index, desiredProp) {
+          id = name + "-" + desiredProp
+          console.log(id);
+          if (!propNamesExist[desiredProp]) {
+            $(document.getElementById(id)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
+            propertiesState = false
           } else {
-            $(this).replaceWith("<div class='event-name'>"+value+"</div>");
+            $(document.getElementById(id)).prepend("<i class='fa fa-check' style='color: green;'></i>")
           }
-      }
-  });
-  */
+        })
 
-  // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
-  $("body").on("click",".expand-button", function(e){
-    var $target = $(e.target)
-    if ($target.hasClass("fa-caret-left")) {
-      $target.removeClass("fa-caret-left");
-      $target.addClass("fa-caret-down");
-    } else {
-      $target.addClass("fa-caret-left");
-      $target.removeClass("fa-caret-down");
-    };
-    $(this).siblings(".properties").toggle();
-  });
-
-  /*
-  // Build list of JSON from spec items, stringify, then save to localStorage.
-  $(".save-button").on("click",function(){
-    list = [];
-
-    // Build list of JSON objects.
-    $(".events").each(function(){
-      props = [];
-      json = {};
-
-      event = $(this).children(".event-name").text();
-      json["event"] = event;
-
-      $(this).children(".properties").each(function(){
-        json["$properties"] = [];
-        $(this).children(".property-name").each(function(){
-          prop = $(this).text();
-          props.push(prop);
-          json["$properties"] = props;
-        });
-      });
-      list.push(json);
-    });
-    // console.log(list);
-
-    // Stringify and save to localStorage.
-    if (typeof(Storage) !== "undefined") {
-        localStorage.setItem("spec", JSON.stringify(list));
-        localStorage.setItem("saved_date", new Date());
-        console.log(JSON.stringify(list));
-        alert("Saved!");
-      } else {
-      alert("Sorry! Your browser does not support local storage.");
-    };
-  });
-  */
-
-      /* Upload and Store data client-side */
-
-      Specs = window.Specs = new ProjectSpecs()
-      Specs.getSpecs()
-      document.getElementById("uploadBtn").onchange = function () {
-        document.getElementById("uploadFile").value = this.value.split("\\")[this.value.split("\\").length - 1];
-      };
-
-
-      // The event listener for the file upload
-      document.getElementById('uploadBtn').addEventListener('change', upload, false);
-
-      // Method that checks that the browser supports the HTML5 File API
-      function browserSupportFileUpload() {
-          var isCompatible = false;
-          if (window.File && window.FileReader && window.FileList && window.Blob) {
-          isCompatible = true;
-          }
-          return isCompatible;
-      }
-
-      // Method that reads and processes the selected file
-      function upload(evt) {
-      if (!browserSupportFileUpload()) {
-        alert('The File APIs are not fully supported in this browser!');
+        if (eventState && propertiesState) {
+          $(document.getElementById(name)).prepend("<i class='fa fa-check' style='color: green;'></i>")
+        } else if (eventState && !propertiesState) {
+          $(document.getElementById(name)).prepend("<i class='fa fa-warning' style='color: orange;'></i>")
         } else {
-          var eventColumn;
-          var propColumn;
-          var superPropColumn;
-          var header;
-          var csvArray;
-          var chartData = {};
-          var events = [];
-          var superProps = [];
-          var data = null;
-          var file = evt.target.files[0];
-          var reader = new FileReader();
-          var eventIndex = -1;
-          reader.readAsText(file);
-
-          reader.onload = function(event) {
-            var csvData = event.target.result;
-            data = $.csv.toArrays(csvData);
-            header = data[0];
-            console.log(header)
-            console.log(data)
-            eventColumn = header.indexOf('Event');
-            propColumn = header.indexOf('Property');
-            superPropColumn = header.indexOf('Super Property');
-
-
-            if (data && data.length > 0) {
-              /* Create a dictionary with the transaction date and transaction amount */
-              csvArray = data.slice(1, data.length);
-              _.each(csvArray, function(arr){
-                var property = arr[propColumn];
-                var event = arr[eventColumn];
-                var superProperty = arr[superPropColumn];
-
-                if (event){
-                  eventIndex++;
-                  events.push({ event: event, $properties: [] });
-                }
-
-                if (property) {
-                  events[eventIndex]['$properties'].push(property);
-                }
-
-                if (superProperty) {
-                  superProps.push(superProperty);
-                }
-                console.log(arr)
-              });
-              _.each(events, function(event){
-                event.$properties = new Set(event.$properties.concat(superProps))
-              });
-              return events
-            } else {
-              /* alert('No data to import!'); */
-            }
-          };
-          reader.onerror = function() {
-              alert('Unable to read ' + file.fileName);
-          };
+          $(document.getElementById(name)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
         }
-        document.getElementById("uploadBtn").empty()
-      }
+
+      })
+    };
 
 
+
+    // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
+    $("body").on("click",".expand-button", function(e){
+      var $target = $(e.target)
+      if ($target.hasClass("fa-caret-left")) {
+        $target.removeClass("fa-caret-left");
+        $target.addClass("fa-caret-down");
+      } else {
+        $target.addClass("fa-caret-left");
+        $target.removeClass("fa-caret-down");
+      };
+      $(this).siblings(".properties").toggle();
+    });
+
+    $('#run').on('click', function(e){
+      Specs.specWrite(MP.$('#specs-list').MPSelect('value'));
+    });
+
+        Specs = window.Specs = new Project()
+        MP.api.MAX_SIMULTANEOUS_QUERIES = 10
+        Specs.getSpecs()
+          .then(function(e) {
+            console.log(e);
+            console.log(e.target.response);
+            Specs.specs = JSON.parse(e.target.response)['spec'];
+            for ( var i = Specs.specs.length - 1; i >= 0; i--) {
+              var spec = Specs['specs'][i]['spec']
+              try {
+                Specs['specs'][i]['spec'] = JSON.parse(vernam(atob(spec), MP.api.apiKey));
+              }
+              catch (e){
+                Specs['specs'].splice(i, 1)
+                console.log('Spec not encoded')
+              }
+            }
+            Specs.renderDropdown()
+
+            /*.on('change', function(e, selection) {
+              alert(selection);
+            });
+            */
+          }, function(e) {
+            console.log(e);
+            console.log('Error');
+          })
+
+
+        document.getElementById("uploadBtn").onchange = function () {
+          document.getElementById("uploadFile").value = this.value.split("\\")[this.value.split("\\").length - 1];
+        };
+
+
+        // The event listener for the file upload
+        document.getElementById('uploadBtn').addEventListener('change', upload, false);
+
+        // Method that checks that the browser supports the HTML5 File API
+        function browserSupportFileUpload() {
+            var isCompatible = false;
+            if (window.File && window.FileReader && window.FileList && window.Blob) {
+            isCompatible = true;
+            }
+            return isCompatible;
+        }
+
+        // Method that reads and processes the selected file
+        function upload(evt) {
+        if (!browserSupportFileUpload()) {
+          alert('The File APIs are not fully supported in this browser!');
+          } else {
+            var eventColumn;
+            var propColumn;
+            var superPropColumn;
+            var header;
+            var csvArray;
+            var chartData = {};
+            var events = [];
+            var superProps = [];
+            var data = null;
+            var file = evt.target.files[0];
+            var reader = new FileReader();
+            var eventIndex = -1;
+            reader.readAsText(file);
+
+            reader.onload = function(event) {
+              var csvData = event.target.result;
+              data = $.csv.toArrays(csvData);
+              header = data[0];
+              console.log(header)
+              console.log(data)
+              eventColumn = header.indexOf('Event');
+              propColumn = header.indexOf('Property');
+              superPropColumn = header.indexOf('Super Property');
+
+
+              if (data && data.length > 0) {
+                /* Create a dictionary with the transaction date and transaction amount */
+                csvArray = data.slice(1, data.length);
+                _.each(csvArray, function(arr){
+                  var property = arr[propColumn];
+                  var event = arr[eventColumn];
+                  var superProperty = arr[superPropColumn];
+
+                  if (event){
+                    eventIndex++;
+                    events.push({ event: event, $properties: [] });
+                  }
+
+                  if (property) {
+                    events[eventIndex]['$properties'].push(property);
+                  }
+
+                  if (superProperty) {
+                    superProps.push(superProperty);
+                  }
+                  console.log(arr)
+                });
+                _.each(events, function(event){
+                  event.$properties = new Set(event.$properties.concat(superProps))
+                });
+                Specs.specs.push({ spec: events })
+                Specs.renderDropdown()
+              } else {
+                /* alert('No data to import!'); */
+              }
+            };
+            reader.onerror = function() {
+                alert('Unable to read ' + file.fileName);
+            };
+          }
+          document.getElementById("uploadBtn").empty()
+        }
   </script>
   </body>
 </html>
