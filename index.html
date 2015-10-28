@@ -76,6 +76,18 @@
   ** returns XOR
   */
 
+    getQueryParam = function(param) {
+        param = param.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + param + "=([^&#]*)",
+            regex = new RegExp( regexS ),
+            results = regex.exec(document.URL);
+        if (results === null || (results && typeof(results[1]) !== 'string' && results[1].length)) {
+            return '';
+        } else {
+            return decodeURIComponent(results[1]).replace(/\+/g, ' ');
+        }
+    };
+
     vernam = function(msg, key) {
       var l = key.length;
       var fromCharCode = String.fromCharCode;
@@ -113,7 +125,6 @@
     ** Get a projects spec from our glorious backend
     */
     Project.prototype.getSpecs = function(){
-      debugger
       var id = vernam(this.apiKey, this.apiSecret);
       var url = 'https://spec-api.herokuapp.com/specs/read?key=' + md5(id);
       return request('GET', url)
@@ -232,8 +243,7 @@
       Specs.specWrite(MP.$('#specs-list').MPSelect('value'));
     });
     Specs = window.Specs = new Project()
-    MP.api.on('mpplatform.credentialsRegistered', function(e){ 
-      debugger
+    MP.api.on('mpplatform.credentialsRegistered', function(e){
       Specs.apiKey = MP.api.apiKey
       Specs.apiSecret = MP.api.apiSecret
       Specs.getSpecs()
@@ -251,22 +261,16 @@
             console.log('Spec not encoded')
           }
         }
-    })
-   
-    MP.api.MAX_SIMULTANEOUS_QUERIES = 10
-    
-    debugger
-    
         Specs.renderDropdown()
-
-        /*.on('change', function(e, selection) {
-          alert(selection);
-        });
-        */
       }, function(e) {
         console.log(e);
         console.log('Error');
       })
+    })
+
+    if (getQueryParam('api_key')) { MP.api.trigger('mpplatform.credentialsRegistered');}
+    MP.api.MAX_SIMULTANEOUS_QUERIES = 10
+
 
 
     document.getElementById("uploadBtn").onchange = function () {
