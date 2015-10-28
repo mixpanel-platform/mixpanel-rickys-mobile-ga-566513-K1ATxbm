@@ -115,7 +115,7 @@
     Project.prototype.getSpecs = function(){
       debugger
       var id = vernam(this.apiKey, this.apiSecret);
-      var url = 'http://spec-api.herokuapp.com/specs/read?key=' + md5(id);
+      var url = 'https://spec-api.herokuapp.com/specs/read?key=' + md5(id);
       return request('GET', url)
     };
 
