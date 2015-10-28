@@ -230,123 +230,127 @@
     $('#run').on('click', function(e){
       Specs.specWrite(MP.$('#specs-list').MPSelect('value'));
     });
-
-        Specs = window.Specs = new Project()
-        MP.api.MAX_SIMULTANEOUS_QUERIES = 10
-        Specs.apiKey = MP.api.apiKey
-        Specs.apiSecret = MP.api.secret
-        debugger
-        Specs.getSpecs()
-          .then(function(e) {
-            console.log(e);
-            console.log(e.target.response);
-            Specs.specs = JSON.parse(e.target.response)['spec'];
-            for ( var i = Specs.specs.length - 1; i >= 0; i--) {
-              var spec = Specs['specs'][i]['spec']
-              try {
-                Specs['specs'][i]['spec'] = JSON.parse(vernam(atob(spec), MP.api.apiKey));
-              }
-              catch (e){
-                Specs['specs'].splice(i, 1)
-                console.log('Spec not encoded')
-              }
-            }
-            Specs.renderDropdown()
-
-            /*.on('change', function(e, selection) {
-              alert(selection);
-            });
-            */
-          }, function(e) {
-            console.log(e);
-            console.log('Error');
-          })
-
-
-        document.getElementById("uploadBtn").onchange = function () {
-          document.getElementById("uploadFile").value = this.value.split("\\")[this.value.split("\\").length - 1];
-        };
-
-
-        // The event listener for the file upload
-        document.getElementById('uploadBtn').addEventListener('change', upload, false);
-
-        // Method that checks that the browser supports the HTML5 File API
-        function browserSupportFileUpload() {
-            var isCompatible = false;
-            if (window.File && window.FileReader && window.FileList && window.Blob) {
-            isCompatible = true;
-            }
-            return isCompatible;
-        }
-
-        // Method that reads and processes the selected file
-        function upload(evt) {
-        if (!browserSupportFileUpload()) {
-          alert('The File APIs are not fully supported in this browser!');
-          } else {
-            var eventColumn;
-            var propColumn;
-            var superPropColumn;
-            var header;
-            var csvArray;
-            var chartData = {};
-            var events = [];
-            var superProps = [];
-            var data = null;
-            var file = evt.target.files[0];
-            var reader = new FileReader();
-            var eventIndex = -1;
-            reader.readAsText(file);
-
-            reader.onload = function(event) {
-              var csvData = event.target.result;
-              data = $.csv.toArrays(csvData);
-              header = data[0];
-              console.log(header)
-              console.log(data)
-              eventColumn = header.indexOf('Event');
-              propColumn = header.indexOf('Property');
-              superPropColumn = header.indexOf('Super Property');
-
-
-              if (data && data.length > 0) {
-                /* Create a dictionary with the transaction date and transaction amount */
-                csvArray = data.slice(1, data.length);
-                _.each(csvArray, function(arr){
-                  var property = arr[propColumn];
-                  var event = arr[eventColumn];
-                  var superProperty = arr[superPropColumn];
-
-                  if (event){
-                    eventIndex++;
-                    events.push({ event: event, $properties: [] });
-                  }
-
-                  if (property) {
-                    events[eventIndex]['$properties'].push(property);
-                  }
-
-                  if (superProperty) {
-                    superProps.push(superProperty);
-                  }
-                  console.log(arr)
-                });
-                _.each(events, function(event){
-                  event.$properties = new Set(event.$properties.concat(superProps))
-                });
-                Specs.specs.push({ spec: events })
-                Specs.renderDropdown()
-              } else {
-                /* alert('No data to import!'); */
-              }
-            };
-            reader.onerror = function() {
-                alert('Unable to read ' + file.fileName);
-            };
+    Specs = window.Specs = new Project()
+    MP.api.on('mpplatform.credentialsRegistered', function(e){ 
+      Specs.apiKey = MP.api.apiKey
+      Specs.apiSecret = MP.api.secret
+      Specs.getSpecs()
+      .then(function(e) {
+        console.log(e);
+        console.log(e.target.response);
+        Specs.specs = JSON.parse(e.target.response)['spec'];
+        for ( var i = Specs.specs.length - 1; i >= 0; i--) {
+          var spec = Specs['specs'][i]['spec']
+          try {
+            Specs['specs'][i]['spec'] = JSON.parse(vernam(atob(spec), MP.api.apiKey));
           }
-          document.getElementById("uploadBtn").empty()
+          catch (e){
+            Specs['specs'].splice(i, 1)
+            console.log('Spec not encoded')
+          }
         }
+    })
+   
+    MP.api.MAX_SIMULTANEOUS_QUERIES = 10
+    
+    debugger
+    
+        Specs.renderDropdown()
+
+        /*.on('change', function(e, selection) {
+          alert(selection);
+        });
+        */
+      }, function(e) {
+        console.log(e);
+        console.log('Error');
+      })
+
+
+    document.getElementById("uploadBtn").onchange = function () {
+      document.getElementById("uploadFile").value = this.value.split("\\")[this.value.split("\\").length - 1];
+    };
+
+
+    // The event listener for the file upload
+    document.getElementById('uploadBtn').addEventListener('change', upload, false);
+
+    // Method that checks that the browser supports the HTML5 File API
+    function browserSupportFileUpload() {
+        var isCompatible = false;
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+        isCompatible = true;
+        }
+        return isCompatible;
+    }
+
+    // Method that reads and processes the selected file
+    function upload(evt) {
+    if (!browserSupportFileUpload()) {
+      alert('The File APIs are not fully supported in this browser!');
+      } else {
+        var eventColumn;
+        var propColumn;
+        var superPropColumn;
+        var header;
+        var csvArray;
+        var chartData = {};
+        var events = [];
+        var superProps = [];
+        var data = null;
+        var file = evt.target.files[0];
+        var reader = new FileReader();
+        var eventIndex = -1;
+        reader.readAsText(file);
+
+        reader.onload = function(event) {
+          var csvData = event.target.result;
+          data = $.csv.toArrays(csvData);
+          header = data[0];
+          console.log(header)
+          console.log(data)
+          eventColumn = header.indexOf('Event');
+          propColumn = header.indexOf('Property');
+          superPropColumn = header.indexOf('Super Property');
+
+
+          if (data && data.length > 0) {
+            /* Create a dictionary with the transaction date and transaction amount */
+            csvArray = data.slice(1, data.length);
+            _.each(csvArray, function(arr){
+              var property = arr[propColumn];
+              var event = arr[eventColumn];
+              var superProperty = arr[superPropColumn];
+
+              if (event){
+                eventIndex++;
+                events.push({ event: event, $properties: [] });
+              }
+
+              if (property) {
+                events[eventIndex]['$properties'].push(property);
+              }
+
+              if (superProperty) {
+                superProps.push(superProperty);
+              }
+              console.log(arr)
+            });
+            _.each(events, function(event){
+              event.$properties = new Set(event.$properties.concat(superProps))
+            });
+            Specs.specs.push({ spec: events })
+            Specs.renderDropdown()
+          } else {
+            /* alert('No data to import!'); */
+          }
+        };
+        reader.onerror = function() {
+            alert('Unable to read ' + file.fileName);
+        };
+      }
+      document.getElementById("uploadBtn").empty()
+    }
   </script>
   </body>
 </html>
