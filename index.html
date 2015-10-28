@@ -232,6 +232,7 @@
     });
     Specs = window.Specs = new Project()
     MP.api.on('mpplatform.credentialsRegistered', function(e){ 
+      debugger
       Specs.apiKey = MP.api.apiKey
       Specs.apiSecret = MP.api.secret
       Specs.getSpecs()
