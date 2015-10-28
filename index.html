@@ -114,7 +114,7 @@
     ** Get a projects spec from our glorious backend
     */
     Project.prototype.getSpecs = function(){
-      var id = vernam(MP.api.apiKey, MP.api.apiSecret);
+      var id = vernam(this.apiKey, this.apiSecret);
       var url = 'http://spec-api.herokuapp.com/specs/read?key=' + md5(id);
       return request('GET', url)
     };
@@ -136,8 +136,8 @@
     */
 
     Project.prototype.postSpec = function (spec){
-      var cypher = this.vernam(JSON.stringify(spec), MP.api.apiKey);
-      var id = this.vernam(MP.api.apiKey, MP.api.apiSecret);
+      var cypher = this.vernam(JSON.stringify(spec), this.apiKey);
+      var id = this.vernam(this.apiKey, this.apiSecret);
       var url = 'http://spec-api.herokuapp.com/specs/create?key=' + md5(id) + '&spec=' + btoa(cypher);
 
       request('GET', url)
@@ -234,6 +234,8 @@
 
         Specs = window.Specs = new Project()
         MP.api.MAX_SIMULTANEOUS_QUERIES = 10
+        Specs.apiKey = MP.api.apiKey
+        Specs.apiSecret = MP.api.secret
         debugger
         Specs.getSpecs()
           .then(function(e) {
