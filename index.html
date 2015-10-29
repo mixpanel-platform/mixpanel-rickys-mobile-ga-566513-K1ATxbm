@@ -163,23 +163,22 @@
       for (var i = 0, n = spec.length; i < n; i++) {
           var event = spec[i]['event'];
           var cssSafe = event.replace('$','')
-
-          $(".accordian").append(
-              [
-                "<div class='panel panel-default'>",
-                "<div class='panel-heading' role='table' id='" + event + "'>",
-                "<a role='button' data-toggle='collapse' data-parent='#accordian' href='#" + cssSafe + "'>" + event + "</a>",
-                "</div>",
-                "<div id=" + cssSafe  + " class='panel-collapse collapse in' role='tabpanel'>",
-                "<div class='panel-body'>",
-                "</div>",
-                "</div>"
-              ].join(''));
+          $("#accordian").append(
+            [
+              "<div class='panel panel-default'>",
+              "<div class='panel-heading' role='table' id='" + event + "'>",
+              "<a role='button' data-toggle='collapse' data-parent='#accordian' href='#" + cssSafe + "'>" + event + "</a>",
+              "</div>",
+              "<div id=" + cssSafe  + " class='panel-collapse collapse in' role='tabpanel'>",
+              "<div class='panel-body'>",
+              "</div>",
+              "</div>"
+            ].join(''));
 
           var properties = spec[i]['$properties']
           for(var j = properties.length - 1; j >= 0; j--){
             var property = properties[j]
-            $(".panel-body").last().append("<div class='property-name' id='" + cssSafe + "-" + property + "'>" + property + "</div>");
+            $(".panel-body").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
           };
         };
         this.checkSpec(spec)
@@ -219,6 +218,7 @@
         });
         _.each(events, function(event){
           event.$properties = new Set(event.$properties.concat(superProps))
+          event.$properties = Array.from(event['$properties']) 
         });
         return {spec: events}
       } else {
@@ -276,6 +276,7 @@
           eventState = false
         }
         propNamesExist = results.json;
+        debugger
         $.each(properties, function(index, desiredProp) {
           id = name + "-" + desiredProp
           console.log(id);
