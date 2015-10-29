@@ -21,8 +21,14 @@
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#fileModal">
       Import / Export Spec
     </button>
-    <div id="specs-list" ></div>
-    <button id="run" class="btn btn-primary" style="display: none;">Run</button>
+    <div class="dropdown">
+      <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Dropdown trigger
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dLabel">
+      </ul>
+    </div>    <button id="run" class="btn btn-primary" style="display: none;">Run</button>
     <div class="panel-group" id="accordian" role="tablist">
     </div>
   <!-- Upload Modal -->
@@ -109,14 +115,14 @@
     ** Needs rewrite can't modify after initialization
     */
     Project.prototype.renderDropdown = function() {
-          var specsOpts = {items: []}
+          $('.dropdown-menu').empty()
           for ( var i = this.specs.length - 1; i >= 0; i--) {
             var created
-            var spec = this['specs'][i]['spec']
             created = this['specs'][i]['created_at'] || "Work In Progress"
-            specsOpts.items.push({label: created, value: spec})
+            var htmlStr = "<li><a id='spec' data-id='" + i + "'>" + created +"</a></li>"
+            $(".dropdown-menu").last().append(htmlStr)
+
           }
-          MP.$('#specs-list').MPSelect(specsOpts)
           $('#run').show()
     }
 
@@ -336,11 +342,15 @@
 
 
     // The event listener for the file upload
+  document.addEventListener("click", "#spec", function(e){
+    debugger
+  });
   document.getElementById('uploadBtn').addEventListener('change', function(evt){
     Specs.importSpec(event).then(
       function (spec) {
-        debugger
         Specs.specs.push(Specs.csvImport(spec))
+        Specs.renderDropdown()
+        $('#fileModal').modal('toggle')
       })
   }
   , false);
