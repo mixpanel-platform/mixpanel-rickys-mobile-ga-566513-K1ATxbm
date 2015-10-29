@@ -342,6 +342,9 @@
 
 
     // The event listener for the file upload
+  $('.dropdown').on('click', '#spec', function(e) {
+    Specs.specWrite(Specs.specs[e.target.getAttribute('data-id')]['spec'])
+  });
   document.addEventListener("click", "#spec", function(e){
     debugger
   });
