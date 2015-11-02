@@ -163,13 +163,14 @@
       for (var i = 0, n = spec.length; i < n; i++) {
           var event = spec[i]['event'];
           var cssSafe = event.replace('$','')
+          cssSafe = cssSafe.replace(' ','_')
           $("#accordian").append(
             [
               "<div class='panel panel-default'>",
-              "<div class='panel-heading' role='table' id='" + event + "'>",
+              "<div class='panel-heading' role='table' id='" + cssSafe + "'>",
               "<a role='button' data-toggle='collapse' data-parent='#accordian' href='#" + cssSafe + "'>" + event + "</a>",
               "</div>",
-              "<div id=" + cssSafe  + " class='panel-collapse collapse in' role='tabpanel'>",
+              "<div id='" + cssSafe  + "' class='panel-collapse collapse in' role='tabpanel'>",
               "<div class='panel-body'>",
               "</div>",
               "</div>"
@@ -178,7 +179,7 @@
           var properties = spec[i]['$properties']
           for(var j = properties.length - 1; j >= 0; j--){
             var property = properties[j]
-            $(".panel-body").last().append("<div class='property-name' id='" + event + "-" + property + "'>" + property + "</div>");
+            $(".panel-body").last().append("<div class='property-name' id='" + cssSafe + "-" + property + "'>" + property + "</div>");
           };
         };
         this.checkSpec(spec)
@@ -270,6 +271,9 @@
 
     checker = function(name, properties) {
       MP.api.topProperties(name).done(function(results){
+        debugger
+        var cssSafe = name.replace('$','')
+        cssSafe = cssSafe.replace(' ','_')
         var eventState = true;
         var propertiesState = true;
         if ($.isEmptyObject(results.json)) {
@@ -278,7 +282,7 @@
         propNamesExist = results.json;
         debugger
         $.each(properties, function(index, desiredProp) {
-          id = name + "-" + desiredProp
+          var id = cssSafe + "-" + desiredProp
           console.log(id);
           if (!propNamesExist[desiredProp]) {
             $(document.getElementById(id)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
@@ -289,9 +293,9 @@
         })
 
         if (eventState && propertiesState) {
-          $(document.getElementById(name)).prepend("<i class='fa fa-check' style='color: green;'></i>")
+          $(document.getElementById(cssSafe)).prepend("<i class='fa fa-check' style='color: green;'></i>")
         } else if (eventState && !propertiesState) {
-          $(document.getElementById(name)).prepend("<i class='fa fa-warning' style='color: orange;'></i>")
+          $(document.getElementById(cssSafe)).prepend("<i class='fa fa-warning' style='color: orange;'></i>")
         } else {
         }
       })
