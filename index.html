@@ -161,28 +161,28 @@
 
     Project.prototype.specWrite = function (spec){
       for (var i = 0, n = spec.length; i < n; i++) {
-        debugger
+        // debugger
           var event = spec[i]['event'];
-          var cssSafe = event.replace('$','')
-          cssSafe = cssSafe.replace(' ','_')
+          var cssSafeEvent = event.replace('$','').replace(' ','_');
           $("#accordion").append(
             [
               "<div class='panel panel-default'>",
-              "<div class='panel-heading' role='table' id='" + cssSafe + "'>",
-              "<a role='button' data-toggle='collapse' data-parent='#accordion' href='#" + cssSafe + "'>" + event + "</a>",
+              "<div class='panel-heading' role='table' id='" + cssSafeEvent + "'>",
+              "<a role='button' data-toggle='collapse' data-parent='#accordion' href='#" + cssSafeEvent + "'>" + event + "</a>",
               "</div>",
-              "<div id='" + cssSafe  + "' class='panel-collapse collapse in' role='tabpanel'>",
+              "<div id='" + cssSafeEvent  + "' class='panel-collapse collapse in' role='tabpanel'>",
               "<div class='panel-body'>",
               "</div>",
               "</div>"
             ].join(''));
 
-          var properties = spec[i]['$properties']
+          var properties = spec[i]['$properties'];
           for(var j = properties.length - 1; j >= 0; j--){
-            var property = properties[j]
-            var propName = property.name
-            var propType = property.type
-            $(".panel-body").last().append("<div class='property-name' id='" + cssSafe + "-" + property + "'>" + property + "</div>");
+            var property = properties[j];
+            var propName = property["name"];
+            var propType = property["type"];
+            var cssSafeName = propName.replace('$','').replace(' ','_');
+            $(".panel-body").last().append("<div class='property-name' id='" + cssSafeEvent + "-" + cssSafeName + "'>" + propName + "</div>");
           };
         };
         this.checkSpec(spec)
