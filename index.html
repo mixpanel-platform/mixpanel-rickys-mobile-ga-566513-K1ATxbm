@@ -242,7 +242,7 @@
           event.$properties = new Set(event.$properties.concat(superProps))
           event.$properties = Array.from(event['$properties'])
         });
-        debugger
+        // debugger
         return {spec: events}
       } else {
         /* alert('No data to import!'); */
@@ -293,7 +293,7 @@
 
     checker = function(name, properties) {
       MP.api.topProperties(name).done(function(results){
-        debugger
+        // debugger
         var cssSafe = name.replace('$','')
         cssSafe = cssSafe.replace(' ','_')
         var eventState = true;
@@ -302,7 +302,7 @@
           eventState = false
         }
         propNamesExist = results.json;
-        debugger
+        // debugger
         $.each(properties, function(index, desiredProp) {
           var id = cssSafe + "-" + desiredProp
           console.log(id);
@@ -373,7 +373,7 @@
     Specs.specWrite(Specs.specs[e.target.getAttribute('data-id')]['spec'])
   });
   document.addEventListener("click", "#spec", function(e){
-    debugger
+    // debugger
   });
   document.getElementById('uploadBtn').addEventListener('change', function(evt){
     Specs.importSpec(event).then(
