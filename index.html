@@ -179,14 +179,26 @@
           var properties = spec[i]['$properties']
           for(var j = properties.length - 1; j >= 0; j--){
             var property = properties[j]
+            var propName = property.name
+            var propType = property.type
             $(".panel-body").last().append("<div class='property-name' id='" + cssSafe + "-" + property + "'>" + property + "</div>");
           };
         };
         this.checkSpec(spec)
     }
-    
+
     Project.prototype.csvImport = function(file){
-      var eventColumn, propColumn, superPropColumn, header, csvArray;
+      var eventColumn,
+        propColumn,
+        superPropColumn,
+        header,
+        csvArray,
+        eventTrigger,
+        eventTriggerCol,
+        propertyType,
+        propertyTypeCol,
+        superPropType,
+        superPropTypeCol;
       var eventIndex = -1;
       var events = [];
       var superProps = [];
@@ -195,32 +207,40 @@
       console.log(header)
       console.log(data)
       eventColumn = header.indexOf('Event');
+      eventTriggerCol = header.indexOf('Event Trigger');
       propColumn = header.indexOf('Property');
-      superPropColumn = header.indexOf('Super Property');
+      propTypeCol = header.indexOf('Property Type');
+      superPropCol = header.indexOf('Super Property');
+      superPropTypeCol = header.indexOf('Super Property Type')
       if (data && data.length > 0) {
         csvArray = data.slice(1, data.length);
         _.each(csvArray, function(arr){
           var property = arr[propColumn];
-          var event = arr[eventColumn];
-          var superProperty = arr[superPropColumn];
+          var eventName = arr[eventColumn];
+          var eventTrigger = arr[eventTriggerCol]
+          var superProperty = arr[superPropCol];
+          var propertyType = arr[propTypeCol];
+          var superPropType = arr[superPropTypeCol]
 
-          if (event){
+          if (eventName){
             eventIndex++;
-            events.push({ event: event, $properties: [] });
+            events.push({ event: eventName, trigger: eventTrigger, $properties: [] });
           }
 
           if (property) {
-            events[eventIndex]['$properties'].push(property);
+            propObj = {name: property, type: propertyType}
+            events[eventIndex]['$properties'].push(propObj);
           }
 
           if (superProperty) {
-            superProps.push(superProperty);
+            superPropObj = {name: superProperty, type: superPropType}
+            superProps.push(superPropObj);
           }
           console.log(arr)
         });
         _.each(events, function(event){
           event.$properties = new Set(event.$properties.concat(superProps))
-          event.$properties = Array.from(event['$properties']) 
+          event.$properties = Array.from(event['$properties'])
         });
         debugger
         return {spec: events}
