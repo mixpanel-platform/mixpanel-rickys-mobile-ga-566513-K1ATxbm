@@ -241,15 +241,16 @@
 
     Project.prototype.specWrite = function (spec){
       for (var i = 0, n = spec.length; i < n; i++) {
-        // debugger
-          var event = spec[i]['event'];
+        debugger
+          var event = spec[i]["event"];
           var cssSafeEvent = event.replace('$','').replace(' ','_');
+          var eventTrigger = spec[i]["trigger"];
           $("#accordion").append(
             [
               "<div class='panel panel-default'>",
               "<div class='panel-heading' id='" + cssSafeEvent + "'>",
               "<a data-parent='#accordion' href='#" + cssSafeEvent + "'>" + event + "</a>",
-              "<div class='event-trigger'>Event trigger goes here!</div>",
+              "<div class='event-trigger'>"+eventTrigger+"</div>",
               "</div>",
               "<div id='" + cssSafeEvent  + "'>",
               "<div class='panel-body'>",
@@ -266,7 +267,7 @@
             $(".panel-body").last().append([
               "<div class='property'>",
               "<div class='property-name' id='" + cssSafeEvent + "-" + cssSafeName + "'>" + propName + "</div>",
-              "<div class='property-type icon numeric'></div>",
+              "<div class='property-type icon'></div>",
               "<div class='property-definition'>This is a dumb property.</div>",
               "</div>"
               ].join(''));
