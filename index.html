@@ -76,6 +76,11 @@
         margin: 8px 7px 7px 8px;
     }
 
+    .panel-group {
+      width:700px;
+      margin-top:20px;
+    }
+
     .property {
       display:block;
       height:20px;
@@ -115,7 +120,7 @@
       <ul class="dropdown-menu" aria-labelledby="dLabel">
       </ul>
     </div>    <button id="run" class="btn btn-primary" style="display: none;">Run</button>
-    <div class="panel-group" id="accordion" role="tablist">
+    <div class="panel-group" id="accordion">
     </div>
   <!-- Upload Modal -->
   <div class="modal fade" id="fileModal">
@@ -255,10 +260,10 @@
             [
               "<div class='panel panel-default'>",
               "<div class='panel-heading' id='" + cssSafeEvent + "'>",
-              "<a data-parent='#accordion' href='#" + cssSafeEvent + "'>" + event + "</a>",
+              "<a class='accordion' href='#" + cssSafeEvent + "'>" + event + "</a>",
               "<div class='event-trigger'>"+eventTrigger+"</div>",
               "</div>",
-              "<div id='" + cssSafeEvent  + "'>",
+              "<div id='" + cssSafeEvent  +"' class='properties'>",
               "<div class='panel-body'>",
               "</div>",
               "</div>"
@@ -488,6 +493,13 @@
       })
   }
   , false);
+
+  // Event listener for new accordion in jQuery
+  // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
+  $("body").on("click",".panel-heading", function(){
+    $(this).siblings(".properties").slideToggle();
+  });
+
 
   </script>
   </body>
