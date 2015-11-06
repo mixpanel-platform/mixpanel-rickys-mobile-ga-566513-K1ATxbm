@@ -300,7 +300,7 @@
       propColumn = header.indexOf('Property');
       propTypeCol = header.indexOf('Property Type');
       superPropCol = header.indexOf('Super Property');
-      superPropTypeCol = header.indexOf('Super Property Type')
+      superPropTypeCol = header.indexOf('Super Property Type');
       if (data && data.length > 0) {
         csvArray = data.slice(1, data.length);
         _.each(csvArray, function(arr){
@@ -309,7 +309,7 @@
           var eventTrigger = arr[eventTriggerCol]
           var superProperty = arr[superPropCol];
           var propertyType = arr[propTypeCol];
-          var superPropType = arr[superPropTypeCol]
+          var superPropType = arr[superPropTypeCol];
 
           if (eventName){
             eventIndex++;
@@ -322,17 +322,17 @@
           }
 
           if (superProperty) {
-            superPropObj = {name: superProperty, type: superPropType}
+            superPropObj = {name: superProperty, type: superPropType};
             superProps.push(superPropObj);
           }
           // console.log(arr)
         });
         _.each(events, function(event){
-          event.$properties = new Set(event.$properties.concat(superProps))
-          event.$properties = Array.from(event['$properties'])
+          event.$properties = new Set(event.$properties.concat(superProps));
+          event.$properties = Array.from(event['$properties']);
         });
         // debugger
-        return {spec: events}
+        return {spec: events};
       } else {
         /* alert('No data to import!'); */
       }
