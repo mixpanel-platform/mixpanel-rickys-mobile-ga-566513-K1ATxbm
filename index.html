@@ -20,7 +20,9 @@
     .edit {
         border-radius: 2px;
         position: relative;
-        margin-top:10px;
+        margin-top:0px;
+        top: 40px;
+        left: 598px;
     }
 
     .edit:after {
@@ -29,7 +31,6 @@
         bottom: 0;
         left: 564px;
         right: 0;
-        content: "\3f"; /* use the hex value here... */
         font-size: 18px; 
         color: #FFF;
         line-height: 0;
@@ -123,6 +124,10 @@
       margin-top:20px;
     }
 
+    .panel-heading i {
+      margin-right:10px;
+    }
+
     .property {
       display:block;
       height:20px;
@@ -136,6 +141,10 @@
     .property-name {
       font-weight: 800;
       width:160px;
+    }
+
+    .property-name i {
+      margin-right:10px;
     }
 
     .property-type {
@@ -275,8 +284,8 @@
     Project.prototype.checkSpec = function(spec){
       $.each(spec, function(index, eventInfo) {
         currentEvent = eventInfo
-        eventName = currentEvent['event'];
-        eventProps = Array.from(currentEvent['$properties']);
+        eventName = currentEvent.event;
+        eventProps = currentEvent.$properties;
         checker(eventName, eventProps);
       });
     };
@@ -297,11 +306,12 @@
       for (var i = 0, n = spec.length; i < n; i++) {
         // debugger
           var event = spec[i]["event"];
-          var cssSafeEvent = event.replace('$','').replace(' ','_');
+          var cssSafeEvent = this.cssSafe(event)
           var eventTrigger = spec[i]["trigger"];
           $("#accordion").append(
             [
               // "<div class='edit'></div>",
+              "<div class='edit fa fa-pencil-square-o fa-lg'></div>",
               "<div class='delete'></div>",
               "<div class='panel panel-default'>",
               "<div class='panel-heading' id='" + cssSafeEvent + "'>",
@@ -318,8 +328,9 @@
           for(var j = properties.length - 1; j >= 0; j--){
             var property = properties[j];
             var propName = property["name"];
-            var propType = property["type"].toLowerCase();
-            var cssSafeName = propName.replace('$','').replace(' ','_');
+            var propType = property["type"] || ''
+            propType = propType.toLowerCase();
+            var cssSafeName = this.cssSafe(propName)
             var propDefinition = property["definition"];
             $(".panel-body").last().append([
               "<div class='property'>",
@@ -333,22 +344,26 @@
         this.checkSpec(spec)
     }
 
+    Project.prototype.cssSafe = function(string){
+      return string.replace('$','').replace(' ','_');
+    }
+
     Project.prototype.csvImport = function(file){
-      var eventColumn,
-        propColumn,
-        superPropColumn,
-        header,
-        csvArray,
-        eventTrigger,
-        eventTriggerCol,
-        propertyDefinition,
-        propertyDefinitionCol,
-        superPropDefinition,
-        superPropDefinitionCol,
-        propertyType,
-        propertyTypeCol,
-        superPropType,
-        superPropTypeCol;
+      var eventColumn;
+      var propColumn;
+      var superPropColumn;
+      var header;
+      var csvArray;
+      var eventTrigger;
+      var eventTriggerCol;
+      var propertyDefinition;
+      var propertyDefinitionCol;
+      var superPropDefinition;
+      var superPropDefinitionCol;
+      var propertyType;
+      var propertyTypeCol;
+      var superPropType;
+      var superPropTypeCol;
       var eventIndex = -1;
       var events = [];
       var superProps = [];
@@ -396,7 +411,6 @@
           event.$properties = new Set(event.$properties.concat(superProps));
           event.$properties = Array.from(event['$properties']);
         });
-        // debugger
         return {spec: events};
       } else {
         /* alert('No data to import!'); */
@@ -430,6 +444,88 @@
     ** Returns CSV
     */
     Project.prototype.exportSpec = function (spec) {
+      function getSubKeys(listOfDicts) {
+        subkeys = {};
+        //For each profile
+        _.each(_.keys(listOfDicts), function(profileIndex){
+          var profilePropData = listOfDicts[profileIndex]['$properties'];
+          _.each(_.keys(profilePropData), function(property){
+            try {
+              subkeys[property] = true;
+            } catch (e) {}
+          });
+        });
+        return subkeys;
+      };
+    //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+      var data = typeof spec != 'object' ? JSON.parse(spec) : spec;
+      var CSV = ''
+
+      //Create list of profiles
+      var event_list = [];
+      for (i = 0; i < data.length; i++) {
+        _.each(_.keys(data[i]), function(profileIndex){
+        var profileData = data[i][profileIndex];
+        event_list.push(profileData)
+        });
+      };
+
+      //Write the header with people properties
+      subkeys = getSubKeys(event_list)
+      var row = ''
+      row += '$distinct_id, '
+      _.each(_.keys(subkeys), function(property) {
+        row += property + ','
+      })
+      CSV += row + '\r\n';
+
+      //Write the data
+      _.each(_.keys(event_list), function(eventIndex) {
+        var event = event_list[eventIndex]
+        var row = ''
+        try {
+          row += event['$distinct_id'] + ','
+        } catch (e) {
+          row += ','
+        }
+        _.each(_.keys(subkeys), function(property) {
+          data = event['$properties'][property]
+          if (!data) {
+            row += ','
+          } else if (_.isString(data)) {
+            row += data.replace(/,/g, "|") + ","
+          } else {
+            row += data + ","
+          }
+          //if (data.indexOf(',') > -1)
+        });
+        CSV += row + '\r\n';
+      });
+
+
+      //Generate a file name
+      var fileName = ReportTitle.replace(/ /g,"_");
+
+      //Initialize file format you want csv or xls
+      var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+
+      // Now the little tricky part.
+      // you can use either>> window.open(uri);
+      // but this will not work in some browsers
+      // or you will not get the correct file extension
+
+      //this trick will generate a temp <a /> tag
+      var link = document.createElement("a");
+      link.href = uri;
+
+      //set the visibility hidden so it will not effect on your web-layout
+      link.style = "visibility:hidden";
+      link.download = fileName + ".csv";
+
+      //this part will append the anchor tag and remove it after automatic click
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     };
 
     /*
@@ -446,32 +542,43 @@
     }
 
     checker = function(name, properties) {
-      MP.api.topProperties(name).done(function(results){
-        // debugger
-        var cssSafe = name.replace('$','')
-        cssSafe = cssSafe.replace(' ','_')
+      var endpoint = 'api/2.0/events/properties/toptypes'
+      MP.api.query(endpoint, {event:name, limit: 255} ).done(function(results){
+        var cssSafe = name.replace('$','').replace(' ','_')
         var eventState = true;
         var propertiesState = true;
-        if ($.isEmptyObject(results.json)) {
+        if ($.isEmptyObject(results)) {
           eventState = false
         }
-        propNamesExist = results.json;
-        // debugger
-        $.each(properties, function(index, desiredProp) {
-          var id = cssSafe + "-" + desiredProp
+        propNamesExist = results;
+        // yellow prop but no type
+        // red no prop
+        // green both prop and type
+        $.each(properties, function(index, Prop) {
+          var cssSafeProp = Prop.name.replace('$','').replace(' ','_')
+          var id = cssSafe + "-" + cssSafeProp
+
           console.log(id);
-          if (!propNamesExist[desiredProp]) {
-            $(document.getElementById(id)).prepend("<i class='fa fa-ban' style='color: red;'></i>")
-            propertiesState = false
+          var $prop = $(document.getElementById(id))
+          if (propNamesExist[Prop.name]) {
+            // debugger
+            var propType = propNamesExist[Prop.name].type
+            if ($prop.next().hasClass(propType)) {
+              $prop.prepend("<i class='fa fa-check' style='color: green;'></i>");
+            } else {
+              $prop.prepend("<i class='fa fa-warning' style='color: orange;'></i>");
+              propertiesState = false;
+            }
           } else {
-            $(document.getElementById(id)).prepend("<i class='fa fa-check' style='color: green;'></i>")
+            $prop.prepend("<i class='fa fa-ban' style='color: red;'></i>");
+            propertiesState = false;
           }
         })
 
         if (eventState && propertiesState) {
-          $(document.getElementById(cssSafe)).prepend("<i class='fa fa-check' style='color: green;'></i>")
+          $(document.getElementById(cssSafe)).prepend("<i class='fa fa-check' style='color: green;'></i>");
         } else if (eventState && !propertiesState) {
-          $(document.getElementById(cssSafe)).prepend("<i class='fa fa-warning' style='color: orange;'></i>")
+          $(document.getElementById(cssSafe)).prepend("<i class='fa fa-warning' style='color: orange;'></i>");
         } else {
         }
       })
@@ -527,7 +634,6 @@
     Specs.specWrite(Specs.specs[e.target.getAttribute('data-id')]['spec'])
   });
   document.addEventListener("click", "#spec", function(e){
-    // debugger
   });
   document.getElementById('uploadBtn').addEventListener('change', function(evt){
     Specs.importSpec(event).then(
