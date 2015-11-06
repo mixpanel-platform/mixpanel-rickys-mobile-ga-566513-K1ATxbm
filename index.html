@@ -16,9 +16,15 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
     <style type="text/css">
+    
     .event-trigger {
       display:inline;
       margin:0 0 0 10px;
+    }
+
+    .icon.string {
+        background-position: 0 0px;
+        width:16px;
     }
 
     .icon.numeric {
@@ -31,32 +37,32 @@
         width:16px;
     }
 
-    .icon .boolean {
+    .icon.boolean {
         background-position: 0 -30px;
         width:16px;
     }
 
-    .hover .boolean {
+    .hover.boolean {
         background-position: -16px -30px;
         width:16px;
     }
 
-    .icon .date {
+    .icon.date {
         background-position: 0 -60px;
         width:16px;
     }
 
-    .hover .date {
+    .hover.date {
         background-position: -16px -60px;
         width:16px;
     }
 
-    .icon .list {
+    .icon.list {
         background-position: 0 -45px;
         width:16px;
     }
 
-    .hover .list {
+    .hover.list {
         background-position: -16px -45px;
         width:16px;
     }
@@ -241,7 +247,7 @@
 
     Project.prototype.specWrite = function (spec){
       for (var i = 0, n = spec.length; i < n; i++) {
-        debugger
+        // debugger
           var event = spec[i]["event"];
           var cssSafeEvent = event.replace('$','').replace(' ','_');
           var eventTrigger = spec[i]["trigger"];
@@ -262,13 +268,13 @@
           for(var j = properties.length - 1; j >= 0; j--){
             var property = properties[j];
             var propName = property["name"];
-            var propType = property["type"];
+            var propType = property["type"].toLowerCase();
             var cssSafeName = propName.replace('$','').replace(' ','_');
             $(".panel-body").last().append([
               "<div class='property'>",
               "<div class='property-name' id='" + cssSafeEvent + "-" + cssSafeName + "'>" + propName + "</div>",
-              "<div class='property-type icon'></div>",
-              "<div class='property-definition'>This is a dumb property.</div>",
+              "<div class='property-type icon " + propType + "'></div>",
+              "<div class='property-definition'>Placeholder</div>",
               "</div>"
               ].join(''));
           };
