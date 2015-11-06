@@ -17,6 +17,25 @@
 
     <style type="text/css">
     
+    .edit {
+        border-radius: 2px;
+        position: relative;
+        margin-top:10px;
+    }
+
+    .edit:after {
+        position: absolute;
+        top: 22px;
+        bottom: 0;
+        left: 564px;
+        right: 0;
+        content: "\3f"; /* use the hex value here... */
+        font-size: 18px; 
+        color: #FFF;
+        line-height: 0;
+        text-align: center;
+    }
+
     .delete {
         border-radius: 2px;
         position: relative;
@@ -282,6 +301,7 @@
           var eventTrigger = spec[i]["trigger"];
           $("#accordion").append(
             [
+              // "<div class='edit'></div>",
               "<div class='delete'></div>",
               "<div class='panel panel-default'>",
               "<div class='panel-heading' id='" + cssSafeEvent + "'>",
@@ -536,6 +556,7 @@
   });
 
   // Make fields editable
+
 
 
   </script>
