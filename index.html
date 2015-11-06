@@ -20,13 +20,14 @@
     .delete {
         border-radius: 2px;
         position: relative;
+        margin-top:10px;
     }
 
     .delete:after {
         position: absolute;
-        top: -6px;
+        top: 22px;
         bottom: 0;
-        left: 652px;
+        left: 564px;
         right: 0;
         content: "\274c"; /* use the hex value here... */
         font-size: 18px; 
@@ -95,7 +96,7 @@
     }
 
     .panel-default {
-      width:700px;
+      width:650px;
     }
 
     .panel-group {
@@ -281,11 +282,11 @@
           var eventTrigger = spec[i]["trigger"];
           $("#accordion").append(
             [
+              "<div class='delete'></div>",
               "<div class='panel panel-default'>",
               "<div class='panel-heading' id='" + cssSafeEvent + "'>",
               "<a class='accordion' href='#" + cssSafeEvent + "'>" + event + "</a>",
-              "<div class='event-trigger'>"+eventTrigger+"</div>",
-              "<div class='delete'></div>",
+              "<div class='event-trigger'>"+eventTrigger+"</div>",            
               "</div>",
               "<div id='" + cssSafeEvent  +"' class='properties'>",
               "<div class='panel-body'>",
@@ -522,6 +523,19 @@
   $("body").on("click",".panel-heading", function(){
     $(this).siblings(".properties").slideToggle();
   });
+
+  // Delete the event if you click the button. Check to make sure before you do.
+  $("body").on("click",".delete", function(){
+    var element = $(this);
+    // debugger
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      $(this).next(".panel-default").remove();
+      $(this).remove();
+      //Add code here to remove items from actual spec
+    }
+  });
+
+  // Make fields editable
 
 
   </script>
