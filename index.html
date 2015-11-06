@@ -18,23 +18,20 @@
     <style type="text/css">
     
     .delete {
-        height: 30px;
-        width: 30px;
-        background-color: #FA6900;
         border-radius: 2px;
         position: relative;
     }
 
     .delete:after {
         position: absolute;
-        top: 0;
+        top: -6px;
         bottom: 0;
-        left: 0;
+        left: 652px;
         right: 0;
         content: "\274c"; /* use the hex value here... */
-        font-size: 50px; 
+        font-size: 18px; 
         color: #FFF;
-        line-height: 100px;
+        line-height: 0;
         text-align: center;
     }
 
@@ -97,6 +94,10 @@
         margin: 8px 7px 7px 8px;
     }
 
+    .panel-default {
+      width:700px;
+    }
+
     .property {
       display:block;
       height:20px;
@@ -135,7 +136,8 @@
       </button>
       <ul class="dropdown-menu" aria-labelledby="dLabel">
       </ul>
-    </div>    <button id="run" class="btn btn-primary" style="display: none;">Run</button>
+    </div>    
+    <button id="run" class="btn btn-primary" style="display: none;">Run</button>
     <div class="panel-group" id="accordion" role="tablist">
     </div>
   <!-- Upload Modal -->
@@ -278,6 +280,7 @@
               "<div class='panel-heading' id='" + cssSafeEvent + "'>",
               "<a data-parent='#accordion' href='#" + cssSafeEvent + "'>" + event + "</a>",
               "<div class='event-trigger'>"+eventTrigger+"</div>",
+              "<div class='delete'></div>",
               "</div>",
               "<div id='" + cssSafeEvent  + "'>",
               "<div class='panel-body'>",
