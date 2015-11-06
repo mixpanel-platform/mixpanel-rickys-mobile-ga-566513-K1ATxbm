@@ -495,7 +495,6 @@
   , false);
 
   // Event listener for new accordion in jQuery
-  // Expand + icon on click and turn to - sign when expanded. Also check number of properties nested under event.
   $("body").on("click",".panel-heading", function(){
     $(this).siblings(".properties").slideToggle();
   });
