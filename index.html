@@ -270,11 +270,12 @@
             var propName = property["name"];
             var propType = property["type"].toLowerCase();
             var cssSafeName = propName.replace('$','').replace(' ','_');
+            var propDefinition = property["definition"];
             $(".panel-body").last().append([
               "<div class='property'>",
               "<div class='property-name' id='" + cssSafeEvent + "-" + cssSafeName + "'>" + propName + "</div>",
               "<div class='property-type icon " + propType + "'></div>",
-              "<div class='property-definition'>Placeholder</div>",
+              "<div class='property-definition'>" + propDefinition + "</div>",
               "</div>"
               ].join(''));
           };
@@ -290,6 +291,10 @@
         csvArray,
         eventTrigger,
         eventTriggerCol,
+        propertyDefinition,
+        propertyDefinitionCol,
+        superPropDefinition,
+        superPropDefinitionCol,
         propertyType,
         propertyTypeCol,
         superPropType,
@@ -307,6 +312,8 @@
       propTypeCol = header.indexOf('Property Type');
       superPropCol = header.indexOf('Super Property');
       superPropTypeCol = header.indexOf('Super Property Type');
+      propertyDefinitionCol = header.indexOf('Property Definition');
+      superPropDefinitionCol = header.indexOf('Super Property Definition');
       if (data && data.length > 0) {
         csvArray = data.slice(1, data.length);
         _.each(csvArray, function(arr){
@@ -316,6 +323,8 @@
           var superProperty = arr[superPropCol];
           var propertyType = arr[propTypeCol];
           var superPropType = arr[superPropTypeCol];
+          var propertyDefinition = arr[propertyDefinitionCol];
+          var superPropDefinition = arr[superPropDefinitionCol];
 
           if (eventName){
             eventIndex++;
@@ -323,12 +332,12 @@
           }
 
           if (property) {
-            propObj = {name: property, type: propertyType}
+            propObj = {name: property, type: propertyType, definition: propertyDefinition};
             events[eventIndex]['$properties'].push(propObj);
           }
 
           if (superProperty) {
-            superPropObj = {name: superProperty, type: superPropType};
+            superPropObj = {name: superProperty, type: superPropType, definition: superPropDefinition};
             superProps.push(superPropObj);
           }
           // console.log(arr)
