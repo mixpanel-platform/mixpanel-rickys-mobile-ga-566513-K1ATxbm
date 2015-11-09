@@ -191,6 +191,16 @@
     /* XHR promises
     */
 
+    post = function(method, url, payload) {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = resolve;
+            xhr.onerror = reject;
+            xhr.send(payload);
+        });
+    };
     request = function(method, url) {
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
@@ -243,16 +253,16 @@
     */
 
     Project.prototype.postSpec = function (spec){
-      var cypher = this.vernam(JSON.stringify(spec), this.apiKey);
-      var id = this.vernam(this.apiKey, this.apiSecret);
-      var url = 'http://spec-api.herokuapp.com/specs/create?key=' + md5(id) + '&spec=' + btoa(cypher);
-
-      return request('GET', url)
+      var cypher = vernam(JSON.stringify(spec), this.apiKey);
+      var id = vernam(this.apiKey, this.apiSecret);
+      var url = 'http://spec-api.herokuapp.com/specs/create'
+      var payload = 'key=' + md5(id) + '&spec=' + btoa(cypher);
+      return post('POST', url, payload)
     };
 
-    Project.prototype.specWrite = function (spec){
+    Project.prototype.specWrite = function (SpecObj){
+      var spec = SpecObj.spec
       for (var i = 0, n = spec.length; i < n; i++) {
-        // debugger
           var event = spec[i]["event"];
           var cssSafeEvent = this.cssSafe(event)
           var eventTrigger = spec[i]["trigger"];
@@ -356,7 +366,7 @@
           event.$properties = new Set(event.$properties.concat(superProps));
           event.$properties = Array.from(event['$properties']);
         });
-        return {spec: events};
+        return {spec: {spec: events}};
       } else {
         /* alert('No data to import!'); */
       }
@@ -388,68 +398,35 @@
     ** Takes JSON Spec
     ** Returns CSV
     */
-    Project.prototype.exportSpec = function (spec) {
-      function getSubKeys(listOfDicts) {
-        subkeys = {};
-        //For each profile
-        _.each(_.keys(listOfDicts), function(profileIndex){
-          var profilePropData = listOfDicts[profileIndex]['$properties'];
-          _.each(_.keys(profilePropData), function(property){
-            try {
-              subkeys[property] = true;
-            } catch (e) {}
-          });
-        });
-        return subkeys;
-      };
-    //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
-      var data = typeof spec != 'object' ? JSON.parse(spec) : spec;
-      var CSV = ''
+    Project.prototype.exportSpec = function (specObj) {
+      var data = specObj.spec.spec
+      var CSV = 'Event, Event Trigger, Property, Property Type, Property Definition, Super Property, Super Property Type, Super Property Definition\r\n'
 
       //Create list of profiles
       var event_list = [];
-      for (i = 0; i < data.length; i++) {
-        _.each(_.keys(data[i]), function(profileIndex){
-        var profileData = data[i][profileIndex];
-        event_list.push(profileData)
-        });
-      };
-
-      //Write the header with people properties
-      subkeys = getSubKeys(event_list)
-      var row = ''
-      row += '$distinct_id, '
-      _.each(_.keys(subkeys), function(property) {
-        row += property + ','
-      })
-      CSV += row + '\r\n';
+      for (var i = 0, n = data.length; i < n; i++){
+        var eventObj = data[i];
+        var eventName = eventObj.event
+        var eventTrigger = eventObj.trigger
+        var properties = eventObj.$properties
+        for (var propIdx = 0, m = properties.length; propIdx < m; propIdx++){
+          var prop = properties[propIdx] || ''
+          var propName = prop.name || ''
+          var propType = prop.type || ''
+          var propDef = prop.definition || ''
+          if (propName == '') {
+            debugger
+          }
+          var eventSection = [eventName, eventTrigger, propName, propType, propDef + '\r\n'].join(',')
+          eventName = ''
+          eventTrigger = ''
+          CSV += eventSection
+        }
+      }
 
       //Write the data
-      _.each(_.keys(event_list), function(eventIndex) {
-        var event = event_list[eventIndex]
-        var row = ''
-        try {
-          row += event['$distinct_id'] + ','
-        } catch (e) {
-          row += ','
-        }
-        _.each(_.keys(subkeys), function(property) {
-          data = event['$properties'][property]
-          if (!data) {
-            row += ','
-          } else if (_.isString(data)) {
-            row += data.replace(/,/g, "|") + ","
-          } else {
-            row += data + ","
-          }
-          //if (data.indexOf(',') > -1)
-        });
-        CSV += row + '\r\n';
-      });
-
-
       //Generate a file name
-      var fileName = ReportTitle.replace(/ /g,"_");
+      var fileName = specObj.created_at
 
       //Initialize file format you want csv or xls
       var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
@@ -506,7 +483,6 @@
           console.log(id);
           var $prop = $(document.getElementById(id))
           if (propNamesExist[Prop.name]) {
-            debugger
             var propType = propNamesExist[Prop.name].type
             if ($prop.next().hasClass(propType)) {
               $prop.prepend("<i class='fa fa-check' style='color: green;'></i>");
