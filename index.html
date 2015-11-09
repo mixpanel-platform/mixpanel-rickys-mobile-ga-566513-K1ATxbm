@@ -224,7 +224,6 @@
             $(".dropdown-menu").last().append(htmlStr)
 
           }
-          $('#run').show()
     }
 
     /*
@@ -261,6 +260,7 @@
     };
 
     Project.prototype.specWrite = function (SpecObj){
+      $('#accordion').empty()
       var spec = SpecObj.spec
       for (var i = 0, n = spec.length; i < n; i++) {
           var event = spec[i]["event"];
@@ -400,7 +400,7 @@
     */
     Project.prototype.exportSpec = function (specObj) {
       var data = specObj.spec.spec
-      var CSV = 'Event, Event Trigger, Property, Property Type, Property Definition, Super Property, Super Property Type, Super Property Definition\r\n'
+      var CSV = 'Event,Event Trigger,Property,Property Type,Property Definition,Super Property,Super Property Type,Super Property Definition\r\n'
 
       //Create list of profiles
       var event_list = [];
