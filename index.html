@@ -458,59 +458,8 @@
       debugger
       // http://www.jsdvalidator.com/Validator
       // for validating against expected schema
-      var jsd_schema =
-            {
-              Type: "Object",
-              Attributes:
-              [
-                {
-                  Name: "spec",
-                  Type: "Array",
-                  Values:
-                  [
-                    {
-                      Type: "Object",
-                      Attributes:
-                      [
-                        {
-                          Name: "event",
-                          Type: "String"
-                        },
-                        {
-                          Name: "trigger",
-                          Type: "String"
-                        },
-                        {
-                          Name: "$properties",
-                          Type: "Array",
-                          Values:
-                          [
-                            {
-                              Type: "Object",
-                              Attributes:
-                              [
-                                {
-                                  Name: "name",
-                                  Type: "String"
-                                },
-                                {
-                                  Name: "type",
-                                  Type: "String"
-                                },
-                                {
-                                  Name: "definition",
-                                  Type: "String"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            };
+      var jsd_schema = {Type:"Object",Attributes:[{Name:"spec",Type:"Array",Values:[{Type:"Object",Attributes:[{Name:"event",Type:"String"},{Name:"trigger",Type:"String"},{Name:"$properties",Type:"Array",Values:[{Type:"Object",Attributes:[{Name:"name",Type:"String"},{Name:"type",Type:"String"},{Name:"definition",Type:"String"}]}]}]}]}]};
+
       var jsd_validator = new JSDValidator({Schema : jsd_schema});
       var spec;
 
@@ -562,6 +511,7 @@
         } else if (eventState && !propertiesState) {
           $(document.getElementById(cssSafe)).prepend("<i class='fa fa-warning' style='color: orange;'></i>");
         } else {
+          $(document.getElementById(cssSafe)).prepend("<i class='fa fa-ban' style='color: red;'></i>");
         }
       })
     };
