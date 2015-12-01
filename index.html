@@ -2,21 +2,27 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <!-- Mixpanel Platform -->
+    <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
+    <!-- Font Awesome  -->
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!-- Utilities Platform -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Base64/0.3.0/base64.js"></script>
-    <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/1.1.1/js/md5.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
   <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
   <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-
     <style type="text/css">
-
     .event-trigger {
       display:inline;
       margin:0 0 0 10px;
@@ -27,15 +33,6 @@
         width:16px;
     }
 
-    .icon.numeric {
-        background-position: 0 -15px;
-        width:16px;
-    }
-
-    .hover.numeric {
-        background-position: -16px -15px;
-        width:16px;
-    }
 
     .icon.boolean {
         background-position: 0 -30px;
@@ -109,6 +106,63 @@
   </head>
 
   <body class="mixpanel-platform-body spec">
+    <div id="wrapper">
+
+       <!-- Sidebar -->
+       <div id="sidebar-wrapper">
+           <ul class="sidebar-nav">
+               <li class="sidebar-brand">
+                   <a href="#">
+                       Start Bootstrap
+                   </a>
+               </li>
+               <li>
+                   <a href="#">Dashboard</a>
+               </li>
+               <li>
+                   <a href="#">Shortcuts</a>
+               </li>
+               <li>
+                   <a href="#">Overview</a>
+               </li>
+               <li>
+                   <a href="#">Events</a>
+               </li>
+               <li>
+                   <a href="#">About</a>
+               </li>
+               <li>
+                   <a href="#">Services</a>
+               </li>
+               <li>
+                   <a href="#">Contact</a>
+               </li>
+           </ul>
+       </div>
+       <!-- /#sidebar-wrapper -->
+
+       <!-- Page Content -->
+       <div id="page-content-wrapper">
+           <div class="container-fluid">
+               <div class="row">
+                   <div class="col-lg-12">
+                       <h1>Simple Sidebar</h1>
+                       <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
+                       <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
+                       <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <!-- /#page-content-wrapper -->
+
+   </div>
+   <script>
+   $("#menu-toggle").click(function(e) {
+       e.preventDefault();
+       $("#wrapper").toggleClass("toggled");
+   });
+   </script>
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#fileModal">
       Import / Export Spec
     </button>
@@ -264,14 +318,14 @@
       $('#accordion').empty()
       var spec = SpecObj.spec
       for (var i = 0, n = spec.length; i < n; i++) {
-          var event = spec[i]["event"];
-          var cssSafeEvent = this.cssSafe(event)
+          var eventName = spec[i]["event"];
+          var cssSafeEvent = this.cssSafe(eventName)
           var eventTrigger = spec[i]["trigger"];
           $("#accordion").append(
             [
               "<div class='panel panel-default'>",
               "<div class='panel-heading' id='" + cssSafeEvent + "'>",
-              "<a class='accordion' href='#" + cssSafeEvent + "'>" + event + "</a>",
+              "<a class='accordion' href='#" + cssSafeEvent + "'>" + eventName + "</a>",
               "<div class='event-trigger'>"+eventTrigger+"</div>",
               "</div>",
               "<div id='" + cssSafeEvent  +"' class='properties'>",
@@ -295,8 +349,12 @@
               "<div class='property-definition'>" + propDefinition + "</div>",
               "</div>"
               ].join(''));
+            $('.main').last().append([
+              propName,
+            ])
           };
         };
+        $('#accordion').sortable()
         this.checkSpec(spec)
     }
 
@@ -455,7 +513,6 @@
     ** Validates a blob as a valid spec
     */
     Project.prototype.validateSpec = function(blob){
-      debugger
       // http://www.jsdvalidator.com/Validator
       // for validating against expected schema
       var jsd_schema = {Type:"Object",Attributes:[{Name:"spec",Type:"Array",Values:[{Type:"Object",Attributes:[{Name:"event",Type:"String"},{Name:"trigger",Type:"String"},{Name:"$properties",Type:"Array",Values:[{Type:"Object",Attributes:[{Name:"name",Type:"String"},{Name:"type",Type:"String"},{Name:"definition",Type:"String"}]}]}]}]}]};
