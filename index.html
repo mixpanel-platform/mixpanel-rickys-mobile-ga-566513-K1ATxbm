@@ -23,6 +23,319 @@
   <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
     <style type="text/css">
+    /* Transformicons
+    */
+    font-face {
+      font-family: 'Source Sans Pro';
+      font-style: normal;
+      font-weight: 300;
+      src: local("Source Sans Pro Light"), local("SourceSansPro-Light"), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v6/toadOcfmlt9b38dHJxOBGNbE_oMaV8t2eFeISPpzbdE.woff) format("woff");
+    }
+
+    @font-face {
+      font-family: 'Source Sans Pro';
+      font-style: normal;
+      font-weight: 400;
+      src: local("Source Sans Pro"), local("SourceSansPro-Regular"), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v6/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format("woff");
+    }
+
+    @font-face {
+      font-family: 'Source Sans Pro';
+      font-style: normal;
+      font-weight: 600;
+      src: local("Source Sans Pro Semibold"), local("SourceSansPro-Semibold"), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v6/toadOcfmlt9b38dHJxOBGJ6-ys_j0H4QL65VLqzI3wI.woff) format("woff");
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: inherit;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      padding: 10px 30px;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      font-size: 5em;
+      font-weight: normal;
+      text-align: center;
+      margin: 100px auto 30px;
+      font-weight: 300;
+    }
+
+    h2 {
+      font-size: 2em;
+      text-align: center;
+      font-weight: 300;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    .buttons-container {
+      margin: 100px auto;
+      text-align: center;
+    }
+
+    button {
+      display: inline-block;
+      margin: 0 1em;
+      border: none;
+      background: none;
+    }
+
+    button span {
+      display: block;
+    }
+
+    .grid-button {
+      padding: 2rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .grid-button .grid {
+      width: 1rem;
+      height: 1rem;
+      background: #ecf0f1;
+      color: #ecf0f1;
+      /* Not in use when the colors are specified below */
+      transition: 0.3s;
+    }
+
+    .grid-button.open .grid {
+      -webkit-transform: rotate3d(0, 0, 1, -45deg) scale3d(0.8, 0.8, 0.8);
+      transform: rotate3d(0, 0, 1, -45deg) scale3d(0.8, 0.8, 0.8);
+    }
+
+    .grid-button.rearrange .grid {
+      box-shadow: -1.25rem -1.25rem, 0 -1.25rem, 1.25rem -1.25rem, -1.25rem 0, 1.25rem 0, -1.25rem 1.25rem, 0 1.25rem, 1.25rem 1.25rem;
+    }
+
+    .grid-button.rearrange.open .grid {
+      box-shadow: 0 -1rem, 0 -2rem, 1rem 0, -2rem 0, 2rem 0, -1rem 0, 0 2rem, 0 1rem;
+    }
+
+    .grid-button.collapse .grid {
+      box-shadow: -1.25rem 0, -1.25rem 1.25rem, 1.25rem 0, 1.25rem -1.25rem, 0 -1.25rem, -1.25rem -1.25rem, 0 1.25rem, 1.25rem 1.25rem;
+    }
+
+    .grid-button.collapse.open .grid {
+      box-shadow: -1rem 0, 0 0 transparent, 1rem 0, 0 0 transparent, 0 -1rem, 0 0 transparent, 0 1rem, 0 0 transparent;
+    }
+
+    /* ====================== lines button ==================================================*/
+    .lines-button {
+      padding: 2rem 1rem;
+      transition: .3s;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 0.57143rem;
+      /* */
+    }
+    .lines-button:hover {
+      opacity: 1;
+    }
+    .lines-button:active {
+      transition: 0;
+    }
+
+    .lines {
+      display: inline-block;
+      width: 4rem;
+      height: 0.57143rem;
+      background: #FFFFFF;
+      border-radius: 0.28571rem;
+      transition: 0.3s;
+      position: relative;
+    }
+    .lines:before, .lines:after {
+      display: inline-block;
+      width: 4rem;
+      height: 0.57143rem;
+      background: #FFFFFF;
+      border-radius: 0.28571rem;
+      transition: 0.3s;
+      position: absolute;
+      left: 0;
+      content: '';
+      -webkit-transform-origin: 0.28571rem center;
+      transform-origin: 0.28571rem center;
+    }
+    .lines:before {
+      top: 1rem;
+    }
+    .lines:after {
+      top: -1rem;
+    }
+
+    .lines-button:hover .lines:before {
+      top: 1.14286rem;
+    }
+    .lines-button:hover .lines:after {
+      top: -1.14286rem;
+    }
+
+    .lines-button.open {
+      -webkit-transform: scale3d(0.8, 0.8, 0.8);
+      transform: scale3d(0.8, 0.8, 0.8);
+    }
+
+    .lines-button.arrow.open .lines:before, .lines-button.arrow.open .lines:after {
+      top: 0;
+      width: 2.22222rem;
+    }
+    .lines-button.arrow.open .lines:before {
+      -webkit-transform: rotate3d(0, 0, 1, 40deg);
+      transform: rotate3d(0, 0, 1, 40deg);
+    }
+    .lines-button.arrow.open .lines:after {
+      -webkit-transform: rotate3d(0, 0, 1, -40deg);
+      transform: rotate3d(0, 0, 1, -40deg);
+    }
+
+    .lines-button.arrow-up.open {
+      -webkit-transform: scale3d(0.8, 0.8, 0.8) rotate3d(0, 0, 1, 90deg);
+      transform: scale3d(0.8, 0.8, 0.8) rotate3d(0, 0, 1, 90deg);
+    }
+    /*!
+     * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+     * Code licensed under the Apache License v2.0.
+     * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+     */
+
+    /* Toggle Styles */
+
+    #wrapper {
+        padding-left: 0;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    #wrapper.toggled {
+        padding-left: 250px;
+    }
+
+    #sidebar-wrapper {
+        z-index: 1000;
+        position: fixed;
+        left: 250px;
+        width: 0;
+        height: 100%;
+        margin-left: -250px;
+        overflow-y: auto;
+        background: #000;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 250px;
+    }
+
+    #page-content-wrapper {
+        width: 100%;
+        position: absolute;
+        padding: 15px;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: absolute;
+        margin-right: -250px;
+    }
+
+    /* Sidebar Styles */
+
+    .sidebar-nav {
+        position: absolute;
+        top: 0;
+        width: 250px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .sidebar-nav li {
+        text-indent: 20px;
+        line-height: 40px;
+    }
+
+    .sidebar-nav li a {
+        display: block;
+        text-decoration: none;
+        color: #999999;
+    }
+
+    .sidebar-nav li a:hover {
+        text-decoration: none;
+        color: #fff;
+        background: rgba(255,255,255,0.2);
+    }
+
+    .sidebar-nav li a:active,
+    .sidebar-nav li a:focus {
+        text-decoration: none;
+    }
+
+    .sidebar-nav > .sidebar-brand {
+        height: 65px;
+        font-size: 18px;
+        line-height: 60px;
+    }
+
+    .sidebar-nav > .sidebar-brand a {
+        color: #999999;
+    }
+
+    .sidebar-nav > .sidebar-brand a:hover {
+        color: #fff;
+        background: none;
+    }
+
+    @media(min-width:768px) {
+        #wrapper {
+            padding-left: 250px;
+        }
+
+        #wrapper.toggled {
+            padding-left: 0;
+        }
+
+        #sidebar-wrapper {
+            width: 250px;
+        }
+
+        #wrapper.toggled #sidebar-wrapper {
+            width: 0;
+        }
+
+        #page-content-wrapper {
+            padding: 20px;
+            position: relative;
+        }
+
+        #wrapper.toggled #page-content-wrapper {
+            position: relative;
+            margin-right: 0;
+        }
+    }
+    /* Our CSS
+    */
     .event-trigger {
       display:inline;
       margin:0 0 0 10px;
@@ -106,36 +419,30 @@
   </head>
 
   <body class="mixpanel-platform-body spec">
-    <div id="wrapper">
+    <div id="wrapper" class="toggled">
 
        <!-- Sidebar -->
        <div id="sidebar-wrapper">
            <ul class="sidebar-nav">
                <li class="sidebar-brand">
                    <a href="#">
-                       Start Bootstrap
+                       Welcome to your new Spec
                    </a>
                </li>
                <li>
-                   <a href="#">Dashboard</a>
+                   <a href="#">Import</a>
                </li>
                <li>
-                   <a href="#">Shortcuts</a>
+                   <a href="#">Export</a>
                </li>
                <li>
-                   <a href="#">Overview</a>
+                   <a href="#">Save</a>
                </li>
                <li>
-                   <a href="#">Events</a>
+                   <a href="#">Check</a>
                </li>
                <li>
-                   <a href="#">About</a>
-               </li>
-               <li>
-                   <a href="#">Services</a>
-               </li>
-               <li>
-                   <a href="#">Contact</a>
+                   <a href="#">Help</a>
                </li>
            </ul>
        </div>
@@ -144,12 +451,24 @@
        <!-- Page Content -->
        <div id="page-content-wrapper">
            <div class="container-fluid">
+             <button class="lines-button arrow arrow-left" type="button" role="button" aria-label="Toggle Navigation">
+               <span class="lines"></span>
+             </button>
                <div class="row">
                    <div class="col-lg-12">
-                       <h1>Simple Sidebar</h1>
-                       <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
-                       <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
-                       <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#fileModal">
+                       Import / Export Spec
+                     </button>
+                     <div class="dropdown">
+                       <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                         Dropdown trigger
+                         <span class="caret"></span>
+                       </button>
+                       <ul class="dropdown-menu" aria-labelledby="dLabel">
+                       </ul>
+                     </div>
+                     <div class="panel-group" id="accordion">
+                     </div>
                    </div>
                </div>
            </div>
@@ -158,24 +477,12 @@
 
    </div>
    <script>
-   $("#menu-toggle").click(function(e) {
+   $(".lines-button").click(function(e) {
        e.preventDefault();
+       $(this).toggleClass("open");
        $("#wrapper").toggleClass("toggled");
    });
    </script>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#fileModal">
-      Import / Export Spec
-    </button>
-    <div class="dropdown">
-      <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Dropdown trigger
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dLabel">
-      </ul>
-    </div>    <button id="run" class="btn btn-primary" style="display: none;">Run</button>
-    <div class="panel-group" id="accordion">
-    </div>
   <!-- Upload Modal -->
   <div class="modal fade" id="fileModal">
     <div class="modal-dialog">
