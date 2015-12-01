@@ -46,43 +46,6 @@
       src: local("Source Sans Pro Semibold"), local("SourceSansPro-Semibold"), url(http://themes.googleusercontent.com/static/fonts/sourcesanspro/v6/toadOcfmlt9b38dHJxOBGJ6-ys_j0H4QL65VLqzI3wI.woff) format("woff");
     }
 
-    a {
-      color: white;
-      text-decoration: none;
-    }
-
-    a:hover {
-      color: inherit;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
-      padding: 10px 30px;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    h1 {
-      font-size: 5em;
-      font-weight: normal;
-      text-align: center;
-      margin: 100px auto 30px;
-      font-weight: 300;
-    }
-
-    h2 {
-      font-size: 2em;
-      text-align: center;
-      font-weight: 300;
-    }
-
-    p {
-      text-align: center;
-    }
-
     .buttons-container {
       margin: 100px auto;
       text-align: center;
@@ -381,7 +344,6 @@
        background-position: -16px -15px;
        width:16px;
     }
-    
     .hover.list {
         background-position: -16px -45px;
         width:16px;
@@ -592,7 +554,7 @@
           for ( var i = this.specs.length - 1; i >= 0; i--) {
             var created
             created = this['specs'][i]['created_at'] || "Work In Progress"
-            var htmlStr = "<li><a id='spec' data-id='" + i + "'>" + created +"</a></li>"
+            var htmlStr = "<li><span id='spec' data-id='" + i + "'>" + created +"</span></li>"
             $(".dropdown-menu").last().append(htmlStr)
 
           }
@@ -642,7 +604,7 @@
             [
               "<div class='panel panel-default'>",
               "<div class='panel-heading' id='" + cssSafeEvent + "'>",
-              "<a class='accordion' href='#" + cssSafeEvent + "'>" + eventName + "</a>",
+              "<span class='accordion' href='#" + cssSafeEvent + "'>" + eventName + "</span>",
               "<div class='event-trigger'>"+eventTrigger+"</div>",
               "</div>",
               "<div id='" + cssSafeEvent  +"' class='properties'>",
