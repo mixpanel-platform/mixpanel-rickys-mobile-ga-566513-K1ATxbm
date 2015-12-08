@@ -633,47 +633,24 @@
       }
   
       Project.prototype.csvImport = function(file){
-        var eventColumn;
-        var propColumn;
-        var superPropColumn;
-        var header;
-        var csvArray;
-        var eventTrigger;
-        var eventTriggerCol;
-        var propertyDefinition;
-        var propertyDefinitionCol;
-        var superPropDefinition;
-        var superPropDefinitionCol;
-        var propertyType;
-        var propertyTypeCol;
-        var superPropType;
-        var superPropTypeCol;
+        var header,
+            csvArray;
         var eventIndex = -1;
         var events = [];
         var superProps = [];
         var data = $.csv.toArrays(file);
         header = data[0];
-        // console.log(header)
-        // console.log(data)
-        eventColumn = header.indexOf('Event');
-        eventTriggerCol = header.indexOf('Event Trigger');
-        propColumn = header.indexOf('Property');
-        propTypeCol = header.indexOf('Property Type');
-        superPropCol = header.indexOf('Super Property');
-        superPropTypeCol = header.indexOf('Super Property Type');
-        propertyDefinitionCol = header.indexOf('Property Definition');
-        superPropDefinitionCol = header.indexOf('Super Property Definition');
         if (data && data.length > 0) {
           csvArray = data.slice(1, data.length);
           _.each(csvArray, function(arr){
-            var property = arr[propColumn];
-            var eventName = arr[eventColumn];
-            var eventTrigger = arr[eventTriggerCol]
-            var superProperty = arr[superPropCol];
-            var propertyType = arr[propTypeCol];
-            var superPropType = arr[superPropTypeCol];
-            var propertyDefinition = arr[propertyDefinitionCol];
-            var superPropDefinition = arr[superPropDefinitionCol];
+            var property = arr[header.indexOf('Property')];
+            var eventName = arr[header.indexOf('Event')];
+            var eventTrigger = arr[header.indexOf('Event Trigger')]
+            var superProperty = arr[header.indexOf('Super Property')];
+            var propertyType = arr[header.indexOf('Property Type')];
+            var superPropType = arr[header.indexOf('Super Property Type')];
+            var propertyDef = arr[header.indexOf('Property Definition')];
+            var superPropDef = arr[header.indexOf('Super Property Definition')];
   
             if (eventName){
               eventIndex++;
@@ -681,12 +658,12 @@
             }
   
             if (property) {
-              propObj = {name: property, type: propertyType, definition: propertyDefinition};
+              propObj = {name: property, type: propertyType, definition: propertyDef};
               events[eventIndex]['$properties'].push(propObj);
             }
   
             if (superProperty) {
-              superPropObj = {name: superProperty, type: superPropType, definition: superPropDefinition};
+              superPropObj = {name: superProperty, type: superPropType, definition: superPropDef};
               superProps.push(superPropObj);
             }
             // console.log(arr)
