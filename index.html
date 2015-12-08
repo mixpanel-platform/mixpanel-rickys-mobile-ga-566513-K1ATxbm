@@ -869,8 +869,10 @@
       $('.dropdown').on('click', '#spec', function(e) {
         Specs.specWrite(Specs.specs[e.target.getAttribute('data-id')]['spec'])
       });
+      
       document.addEventListener("click", "#spec", function(e){
       });
+      
       document.getElementById('uploadBtn').addEventListener('change', function(evt){
         Specs.importSpec(event).then(
           function (spec) {
