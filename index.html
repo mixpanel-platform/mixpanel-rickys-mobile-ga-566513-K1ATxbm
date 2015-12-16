@@ -321,12 +321,12 @@
         width:16px;
     }
 
-    .icon.date {
+    .icon.datetime {
         background-position: 0 -60px;
         width:16px;
     }
 
-    .hover.date {
+    .hover.datetime {
         background-position: -16px -60px;
         width:16px;
     }
@@ -617,10 +617,10 @@
           for(var j = properties.length - 1; j >= 0; j--){
             var property = properties[j];
             var propName = property["name"];
-            var propType = property["type"] || ''
+            var propType = property["type"] || '';
             propType = propType.toLowerCase();
             var cssSafeName = this.cssSafe(propName)
-            var propDefinition = property["definition"];
+            var propDefinition = property["definition"] || '';
             $(".panel-body").last().append([
               "<div class='property'>",
               "<div class='property-name' id='" + cssSafeEvent + "-" + cssSafeName + "'>" + propName + "</div>",
@@ -800,6 +800,7 @@
       var spec;
 
       try {
+        debugger
         spec = JSON.parse(vernam(atob(blob), MP.api.apiKey));
       } catch (e){
         console.log('Spec not encoded');
@@ -917,7 +918,6 @@
   $("body").on("click",".panel-heading", function(){
     $(this).siblings(".properties").slideToggle();
   });
-
 
   </script>
   </body>
